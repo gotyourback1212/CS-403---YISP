@@ -5,7 +5,7 @@
 
 #include <string>
 #include <memory>
-#include <vector>
+#include <list>
 #include <variant>
 
 class SExpr {
@@ -35,16 +35,30 @@ class Atom : public SExpr {};
         void print() const override;
     };
 
-// List (for convenience)
 class List : public SExpr {
 public:
-    std::vector<SExprPtr> elements;
-    List(const std::vector<SExprPtr>& elems) : elements(elems) {}
+    std::list<SExprPtr> elements;
+    List(const std::list<SExprPtr>& elems) : elements(elems) {}
     void print() const override;
 };
 
+
+
 #endif // SXPR_H
 
+/* 
+
+/
+class Cons : public SExpr { 
+    public: 
+        std::vector<SExprPtr> elements; 
+        Cons(const std::vector<SExprPtr>& elems) : elements(elems) {} 
+        void print() const override;  
+}
+
+// List (for convenience)
+
+*/ 
 
 
 /*

@@ -1,8 +1,8 @@
-#include "Lexer.h"
+#include "Token.h"
 #include <cctype>
 
-std::vector<Token> tokenize(const std::string& input) {
-    std::vector<Token> tokens;
+std::list<Token> tokenize(const std::string& input) {
+    std::list<Token> tokens;
     size_t i = 0;
     while (i < input.length()) {
         if (std::isspace(input[i])) {

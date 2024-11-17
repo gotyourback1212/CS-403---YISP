@@ -9,16 +9,13 @@ void Symbol::print() const {
     std::cout << name;
 }
 
-
 void List::print() const {
-    std::cout << "(";
-    for (size_t i = 0; i < elements.size(); ++i) {
-        elements[i]->print();
-        if (i != elements.size() - 1) {
+    for (auto it = elements.begin(); it != elements.end(); ++it) {
+        (*it)->print();
+        if (std::next(it) != elements.end()) {
             std::cout << " ";
         }
     }
-    std::cout << ")";
 }
 
 

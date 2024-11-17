@@ -1,7 +1,8 @@
-#include "Lexer.h"
+#include "Token.h"
 #include "Parser.h"
 #include <iostream>
 #include <string>
+#include <list> 
 
 void repl() {
     std::string line;
@@ -15,7 +16,7 @@ void repl() {
             break;
         }
         try {
-            auto tokens = tokenize(line);
+            std::list <Token> tokens(tokenize(line));
             Parser parser(tokens);
             SExprPtr expr = parser.parseExpr();
             expr->print();

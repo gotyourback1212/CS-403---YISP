@@ -2,24 +2,28 @@
 #define PARSER_H
 
 #include "SExpr.h"
-#include "Lexer.h"
-#include <vector>
+#include "Token.h"
+#include <list>
 
 class Parser {
 public:
-    Parser(const std::vector<Token>& tokens);
+    Parser(std::list<Token> tokens);
+
     SExprPtr parseExpr();
+    SExprPtr parseAtom();
 
 private:
-    const std::vector<Token>& tokens;
-    size_t current;
+    std::list<Token> tokens;
 
     Token peek() const;
     Token get();
     void expect(TokenType type);
-
-    SExprPtr parseAtom();
-    SExprPtr parseList();
 };
 
 #endif // PARSER_H
+
+
+
+
+
+//SExprPtr parseList();

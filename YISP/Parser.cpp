@@ -1,35 +1,52 @@
 #include "Parser.h"
+#include "Token.h"
 #include <stdexcept>
 #include <iostream> 
 
-Parser::Parser(const std::vector<Token>& tokens) : tokens(tokens), current(0) {}
+Parser::Parser(std::list<Token> tokens) : tokens(tokens) {}
 
 Token Parser::peek() const {
-    return tokens[current];
+    if (tokens.empty()) {
+        throw std::runtime_error("No more tokens");
+    }
+    return tokens.front();
 }
 
 Token Parser::get() {
-    return tokens[current++];
+   if (tokens.empty()) {
+        throw std::runtime_error("No more tokens");
+    }
+    Token token = tokens.front();
+    tokens.pop_front();
+    return token;
 }
 
 void Parser::expect(TokenType type) {
     if (peek().type != type) {
         throw std::runtime_error("Unexpected token: " + peek().text);
     }
-    ++current;
+    get();
 }
 
 SExprPtr Parser::parseExpr() {
-    Token token = peek();
-    if (token.type == TokenType::NUMBER || token.type == TokenType::SYMBOL) {
-        std::cout << "Is atom" << std::endl; 
+   const Token token = get();
+    if (token.type == TokenType::LPAREN) {
+        // Parse a list
+        std::list<SExprPtr> elements;
+        while (peek().type != TokenType::RPAREN) {
+            elements.push_back(parseExpr());
+        }
+        // Consume the closing RPAREN
+        expect(TokenType::RPAREN);
+        return std::make_shared<List>(elements);
+    } else if (token.type == TokenType::NUMBER || token.type == TokenType::SYMBOL) {
+        // Parse an atom
+        tokens.push_front(token); // Put the token back for parseAtom
         return parseAtom();
-    } else if (token.type == TokenType::LPAREN) {
-        std::cout << "Is list" << std::endl;
-        return parseList();
     } else {
-        throw std::runtime_error("Unexpected token: " + token.text);
+        throw std::runtime_error("Unexpected token in expression: " + token.text);
     }
+
 }
 
 SExprPtr Parser::parseAtom() {
@@ -45,6 +62,11 @@ SExprPtr Parser::parseAtom() {
     }
 }
 
+
+
+
+
+/*
 SExprPtr Parser::parseList() {
     expect(TokenType::LPAREN);
     std::vector<SExprPtr> elements;
@@ -56,3 +78,4 @@ SExprPtr Parser::parseList() {
     expect(TokenType::RPAREN);
     return std::make_shared<List>(elements);
 }
+*/ 
