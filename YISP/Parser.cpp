@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <iostream> 
 
-Parser::Parser(std::list<Token> tokens) : tokens(tokens) {}
+Parser::Parser(std::list<Token>& tokens) : tokens(tokens) {}
 
 Token Parser::peek() const {
     if (tokens.empty()) {
@@ -29,13 +29,20 @@ void Parser::expect(TokenType type) {
 }
 
 SExprPtr Parser::parseExpr() {
-   if (tokens.empty()) {
+   if (tokens.empty()) { //Makes sure expression is not empty
         throw std::runtime_error("Unexpected end of input while parsing expression");
     }
 
     const Token token = get();
     if (token.type == TokenType::LPAREN) {
         // Parse a list
+
+        if (peek().type == TokenType::RPAREN) {
+            // If the next token is a closing parenthesis, it's an empty list
+            get(); // Consume the RPAREN
+            return NIL; // Return the global NIL object
+        }
+
         std::list<SExprPtr> elements;
         while (peek().type != TokenType::RPAREN) {
             elements.push_back(parseExpr());
@@ -45,15 +52,6 @@ SExprPtr Parser::parseExpr() {
         }
         // Consume the closing RPAREN
         expect(TokenType::RPAREN);
-
-        // Check if it's a print function
-        if (!elements.empty()) {
-            auto firstElement = dynamic_cast<Symbol*>(elements.front().get());
-            if (firstElement && firstElement->name == "print") {
-                parsePrint(elements);
-                return nullptr; 
-            }
-        }
 
         return std::make_shared<List>(elements);
     } else if (token.type == TokenType::NUMBER || token.type == TokenType::SYMBOL) {
@@ -66,50 +64,21 @@ SExprPtr Parser::parseExpr() {
 }
 
 SExprPtr Parser::parseAtom() {
-    Token token = get();
+   Token token = get();
     if (token.type == TokenType::NUMBER) {
         std::cout << "Parsing number" << std::endl;
         return std::make_shared<Number>(std::stoi(token.text));
     } else if (token.type == TokenType::SYMBOL) {
         std::cout << "Parsing symbol" << std::endl;
-        return std::make_shared<Symbol>(token.text);
+        if (token.text == "nil") {
+            return NIL; 
+        } else if (token.text == "#T") {
+            return TRUTH; 
+        } else {
+            return std::make_shared<Symbol>(token.text);
+        }
     } else {
         throw std::runtime_error("Invalid atom: " + token.text);
     }
 }
 
-
-
-
-void Parser::parsePrint(const std::list<SExprPtr>& elements) {
-    if (elements.size() < 2) {
-        throw std::runtime_error("print expects at least one argument");
-    }
-    auto it = ++elements.begin(); // Skip the "print" symbol itself
-    for (; it != elements.end(); ++it) {
-        if (!*it) {
-            throw std::runtime_error("Null expression in print");
-        }
-        (*it)->print();
-        if (std::next(it) != elements.end()) {
-            std::cout << " ";
-        }
-    }
-    std::cout << std::endl;
-}
-
-
-
-/*
-SExprPtr Parser::parseList() {
-    expect(TokenType::LPAREN);
-    std::vector<SExprPtr> elements;
-
-    std::cout << "Parsing List" << std::endl;
-    while (peek().type != TokenType::RPAREN) {
-        elements.push_back(parseExpr());
-    }
-    expect(TokenType::RPAREN);
-    return std::make_shared<List>(elements);
-}
-*/ 

@@ -1,11 +1,14 @@
 #include "Token.h"
 #include "Parser.h"
+#include "Eval.h"
+
 #include <iostream>
 #include <string>
 #include <list> 
 
 void repl() {
     std::string line;
+    Eval eval; 
     std::cout << "Lisp Interpreter REPL. Type 'exit' to quit.\n";
     while (true) {
         std::cout << ">>> ";
@@ -19,9 +22,8 @@ void repl() {
             std::list <Token> tokens(tokenize(line));
             Parser parser(tokens);
             SExprPtr expr = parser.parseExpr();
-            if (expr) { // Only call print if expr is not nullptr
-                expr->print();
-                std::cout << std::endl;
+            if (expr) {
+                eval.evaluate(expr); // Evaluate the parsed expression
             }
         } catch (const std::exception& e) {
             std::cerr << "Error: " << e.what() << std::endl;
@@ -33,6 +35,8 @@ int main() {
     repl();
     return 0;
 }
+
+
 
 
 

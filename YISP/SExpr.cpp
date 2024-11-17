@@ -9,6 +9,14 @@ void Symbol::print() const {
     std::cout << name;
 }
 
+void Nil::print() const {
+        std::cout << "nil";
+}
+
+void Truth::print() const {
+        std::cout << "true";
+}
+
 void List::print() const {
     std::cout << "(";
     for (auto it = elements.begin(); it != elements.end(); ++it) {
@@ -19,6 +27,8 @@ void List::print() const {
     }
     std::cout << ")";
 }
+
+
 
 
 

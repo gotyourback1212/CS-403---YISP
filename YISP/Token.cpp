@@ -14,20 +14,34 @@ std::list<Token> tokenize(const std::string& input) {
         } else if (input[i] == ')') {
             tokens.push_back({TokenType::RPAREN, ")"});
             ++i;
-        } else if (std::isdigit(input[i])) {
-            size_t start = i;
-            while (i < input.length() && std::isdigit(input[i])) {
-                ++i;
-            }
-            tokens.push_back({TokenType::NUMBER, input.substr(start, i - start)});
         } else {
+            // Alphanumeric or symbol token
             size_t start = i;
-            while (i < input.length() && !std::isspace(input[i]) && input[i] != '(' && input[i] != ')' && input[i] != '.') {
+            while (i < input.length() && 
+                   !std::isspace(input[i]) && 
+                   input[i] != '(' && 
+                   input[i] != ')') {
                 ++i;
             }
-            tokens.push_back({TokenType::SYMBOL, input.substr(start, i - start)});
+            std::string token = input.substr(start, i - start);
+
+            // Treat any token with non-digit characters as a SYMBOL
+            bool isNumber = true;
+            for (char c : token) {
+                if (!std::isdigit(c)) {
+                    isNumber = false;
+                    break;
+                }
+            }
+
+            if (isNumber) {
+                tokens.push_back({TokenType::NUMBER, token});
+            } else {
+                tokens.push_back({TokenType::SYMBOL, token});
+            }
         }
     }
+
     tokens.push_back({TokenType::END, ""});
     return tokens;
 }
