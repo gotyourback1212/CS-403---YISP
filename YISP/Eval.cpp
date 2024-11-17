@@ -55,12 +55,8 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
 
             } else if (symbol->name == "not") {
                 return evalNot(*list); // Return TRUTH or NIL
-            } else if (symbol->name == "and") {
-                return evalAnd(*list); // Handle logical AND
-            } else if (symbol->name == "or") {
-                return evalOr(*list); // Handle logical OR
-
-
+            
+    
             } else if(symbol->name == "cons"){
                 return evalCons(*list); //Return the results of cons
             } else if(symbol->name == "car"){
@@ -306,6 +302,7 @@ SExprPtr Eval::evalLte(const List& list) {
 
 //Evaluate 'eq' function
 SExprPtr Eval::evalEq(const List& list) {
+    std::cout << "Eval eq function" << std::endl;
     if (list.elements.size() != 3) {
         throw std::runtime_error("eq expects exactly two arguments");
     }
@@ -337,6 +334,7 @@ SExprPtr Eval::evalEq(const List& list) {
 
 // Evaluate `not` function
 SExprPtr Eval::evalNot(const List& list) {
+     std::cout << "Eval nor function" << std::endl;
     if (list.elements.size() != 2) {
         throw std::runtime_error("not expects exactly one argument");
     }
@@ -349,39 +347,6 @@ SExprPtr Eval::evalNot(const List& list) {
     return std::dynamic_pointer_cast<Nil>(argument) ? TRUTH : NIL;
 }
 
-// Evaluate `or` function
-SExprPtr Eval::evalAnd(const List& list) {
-    if (list.elements.size() < 2) {
-        throw std::runtime_error("and expects at least one argument");
-    }
-
-    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
-        SExprPtr result = evaluate(*it);
-        if (std::dynamic_pointer_cast<Nil>(result)) {
-            return NIL; // If any argument is NIL, return NIL immediately
-        }
-    }
-
-    // Return the last non-NIL value
-    return TRUTH;
-}
-
-// Evaluate `or` function
-SExprPtr Eval::evalOr(const List& list) {
-    if (list.elements.size() < 2) {
-        throw std::runtime_error("or expects at least one argument");
-    }
-
-    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
-        SExprPtr result = evaluate(*it);
-        if (!std::dynamic_pointer_cast<Nil>(result)) {
-            return TRUTH; // If any argument is non-NIL, return it immediately
-        }
-    }
-
-    // If all arguments are NIL, return NIL
-    return NIL;
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Evaluate `NIL?` function
@@ -582,3 +547,52 @@ SExprPtr Eval::evalMod(const List& list) {
 
     return std::make_shared<Number>(firstNumber->value % secondNumber->value);
 }
+
+
+
+
+
+/*
+    } else if (symbol->name == "and") {
+        return evalAnd(*list); // Handle logical AND
+    } else if (symbol->name == "or") {
+        return evalOr(*list); // Handle logical OR
+
+    // Evaluate `and` function
+SExprPtr Eval::evalAnd(const List& list) {
+     std::cout << "Eval and function" << std::endl;
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("and expects at least one argument");
+    }
+
+    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
+        SExprPtr result = evaluate(*it);
+        if (std::dynamic_pointer_cast<Nil>(result)) {
+            return NIL; // If any argument is NIL, return NIL immediately
+        }
+    }
+
+    // Return the last non-NIL value
+    return TRUTH;
+}
+
+// Evaluate `or` function
+SExprPtr Eval::evalOr(const List& list) {
+     std::cout << "Eval or function" << std::endl;
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("or expects at least one argument");
+    }
+
+    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
+        SExprPtr result = evaluate(*it);
+        if (!std::dynamic_pointer_cast<Nil>(result)) {
+            return TRUTH; // If any argument is non-NIL, return it immediately
+        }
+    }
+
+    // If all arguments are NIL, return NIL
+    return NIL;
+}
+
+
+*/ 
