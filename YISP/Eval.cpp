@@ -31,6 +31,7 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
             // Handle special forms
             if (symbol->name == "print") {
                 return evalPrint(*list); // Return the result of print
+
             } else if (symbol->name == "NIL?") {
                 return evalIsNil(*list); // Return TRUTH or NIL
             } else if (symbol->name == "SYM?") {
@@ -39,6 +40,7 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
                 return evalIsNum(*list); // Return TRUTH or NIL
             } else if (symbol->name == "LIST?") {
                 return evalIsList(*list); // Return TRUTH or NIL
+
             } else if (symbol->name == "gt") {
                 return evalGt(*list); // Return TRUTH or NIL
             } else if (symbol->name == "lt") {
@@ -47,12 +49,25 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
                 return evalGte(*list); // Return TRUTH or NIL
             } else if (symbol->name == "lte") {
                 return evalLte(*list); // Return TRUTH or NIL
+            } else if (symbol->name == "eq") {
+                return evalEq(*list); // Return TRUTH or NIL
+
+
+            } else if (symbol->name == "not") {
+                return evalNot(*list); // Return TRUTH or NIL
+            } else if (symbol->name == "and") {
+                return evalAnd(*list); // Handle logical AND
+            } else if (symbol->name == "or") {
+                return evalOr(*list); // Handle logical OR
+
+
             } else if(symbol->name == "cons"){
                 return evalCons(*list); //Return the results of cons
             } else if(symbol->name == "car"){
                 return evalCar(*list); //Return the results of car
             } else if(symbol->name == "cdr"){
                 return evalCdr(*list); //Return the results of cdr
+
             } else if (symbol->name == "+") {
                 return evalAdd(*list); // Handle addition
             } else if (symbol->name == "-") {
@@ -63,6 +78,7 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
                 return evalDiv(*list); // Handle division
             } else if (symbol->name == "%") {
                 return evalMod(*list); // Handle modulo
+
             } else {
                 throw std::runtime_error("Unknown function: " + symbol->name);
             }
@@ -288,7 +304,84 @@ SExprPtr Eval::evalLte(const List& list) {
     }
 }
 
+//Evaluate 'eq' function
+SExprPtr Eval::evalEq(const List& list) {
+    if (list.elements.size() != 3) {
+        throw std::runtime_error("eq expects exactly two arguments");
+    }
 
+    // Evaluate both arguments
+    auto it = std::next(list.elements.begin()); // Skip the "eq" symbol
+    SExprPtr firstArg = evaluate(*it);
+    SExprPtr secondArg = evaluate(*std::next(it));
+
+    // Check if both arguments are numbers
+    auto firstNum = std::dynamic_pointer_cast<Number>(firstArg);
+    auto secondNum = std::dynamic_pointer_cast<Number>(secondArg);
+    if (firstNum && secondNum) {
+        return (firstNum->value == secondNum->value) ? TRUTH : NIL;
+    }
+
+    // Check if both arguments are symbols
+    auto firstSym = std::dynamic_pointer_cast<Symbol>(firstArg);
+    auto secondSym = std::dynamic_pointer_cast<Symbol>(secondArg);
+    if (firstSym && secondSym) {
+        return (firstSym->name == secondSym->name) ? TRUTH : NIL;
+    }
+
+    // If arguments are not comparable
+    return NIL;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Evaluate `not` function
+SExprPtr Eval::evalNot(const List& list) {
+    if (list.elements.size() != 2) {
+        throw std::runtime_error("not expects exactly one argument");
+    }
+
+    // Evaluate the argument
+    auto it = std::next(list.elements.begin()); // Skip the "not" symbol
+    SExprPtr argument = evaluate(*it);
+
+    // Return TRUTH if argument is NIL, otherwise return NIL
+    return std::dynamic_pointer_cast<Nil>(argument) ? TRUTH : NIL;
+}
+
+// Evaluate `or` function
+SExprPtr Eval::evalAnd(const List& list) {
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("and expects at least one argument");
+    }
+
+    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
+        SExprPtr result = evaluate(*it);
+        if (std::dynamic_pointer_cast<Nil>(result)) {
+            return NIL; // If any argument is NIL, return NIL immediately
+        }
+    }
+
+    // Return the last non-NIL value
+    return TRUTH;
+}
+
+// Evaluate `or` function
+SExprPtr Eval::evalOr(const List& list) {
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("or expects at least one argument");
+    }
+
+    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
+        SExprPtr result = evaluate(*it);
+        if (!std::dynamic_pointer_cast<Nil>(result)) {
+            return TRUTH; // If any argument is non-NIL, return it immediately
+        }
+    }
+
+    // If all arguments are NIL, return NIL
+    return NIL;
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Evaluate `NIL?` function
@@ -370,6 +463,7 @@ SExprPtr Eval::evalIsList(const List& list) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Evaluate `+` function
 SExprPtr Eval::evalAdd(const List& list) {
     std::cout << "Eval add function" << std::endl; 
     if (list.elements.size() < 2) {
@@ -389,7 +483,7 @@ SExprPtr Eval::evalAdd(const List& list) {
     return std::make_shared<Number>(sum);
 }
 
-
+// Evaluate `-` function
 SExprPtr Eval::evalSub(const List& list) {
     std::cout << "Eval sub function" << std::endl; 
     if (list.elements.size() < 3) {
@@ -416,7 +510,7 @@ SExprPtr Eval::evalSub(const List& list) {
     return std::make_shared<Number>(result);
 }
 
-
+// Evaluate `*` function
 SExprPtr Eval::evalMul(const List& list) {
     std::cout << "Eval Mul function" << std::endl; 
     if (list.elements.size() < 2) {
@@ -436,7 +530,7 @@ SExprPtr Eval::evalMul(const List& list) {
     return std::make_shared<Number>(product);
 }
 
-
+// Evaluate `/` function
 SExprPtr Eval::evalDiv(const List& list) {
     std::cout << "Eval Div function" << std::endl; 
     if (list.elements.size() < 3) {
@@ -466,7 +560,7 @@ SExprPtr Eval::evalDiv(const List& list) {
     return std::make_shared<Number>(result);
 }
 
-
+// Evaluate `%` function
 SExprPtr Eval::evalMod(const List& list) {
     std::cout << "Eval Mod function" << std::endl;
     if (list.elements.size() != 3) {

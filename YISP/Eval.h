@@ -21,16 +21,22 @@ public:
     SExprPtr evalGt(const List& list); 
     SExprPtr evalLt(const List& list); 
     SExprPtr evalGte(const List& list); 
-    SExprPtr evalLte(const List& list); 
+    SExprPtr evalLte(const List& list);
+    SExprPtr evalEq(const List& list);
 
-    //Math functions
+    //Logical Functions
+    SExprPtr evalNot(const List& list);
+    SExprPtr evalAnd(const List& list);
+    SExprPtr evalOr(const List& list);
+
+    //Math Functions
     SExprPtr evalAdd(const List& list); 
     SExprPtr evalSub(const List& list); 
     SExprPtr evalMul(const List& list); 
     SExprPtr evalDiv(const List& list); 
     SExprPtr evalMod(const List& list); 
     
-    //List funcitons
+    //List Funcitons
     SExprPtr evalCons(const List& list); 
     SExprPtr evalCar(const List& list); 
     SExprPtr evalCdr(const List& list); 
