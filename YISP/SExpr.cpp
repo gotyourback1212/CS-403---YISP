@@ -10,12 +10,14 @@ void Symbol::print() const {
 }
 
 void List::print() const {
+    std::cout << "(";
     for (auto it = elements.begin(); it != elements.end(); ++it) {
         (*it)->print();
         if (std::next(it) != elements.end()) {
             std::cout << " ";
         }
     }
+    std::cout << ")";
 }
 
 

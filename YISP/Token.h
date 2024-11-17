@@ -10,9 +10,6 @@ enum class TokenType {
     SYMBOL,
     LPAREN,
     RPAREN,
-
-    PRINT, 
-
     END
 };
 

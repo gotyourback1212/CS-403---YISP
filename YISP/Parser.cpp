@@ -29,15 +29,32 @@ void Parser::expect(TokenType type) {
 }
 
 SExprPtr Parser::parseExpr() {
-   const Token token = get();
+   if (tokens.empty()) {
+        throw std::runtime_error("Unexpected end of input while parsing expression");
+    }
+
+    const Token token = get();
     if (token.type == TokenType::LPAREN) {
         // Parse a list
         std::list<SExprPtr> elements;
         while (peek().type != TokenType::RPAREN) {
             elements.push_back(parseExpr());
+            if (tokens.empty()) {
+                throw std::runtime_error("Mismatched parentheses: missing ')'");
+            }
         }
         // Consume the closing RPAREN
         expect(TokenType::RPAREN);
+
+        // Check if it's a print function
+        if (!elements.empty()) {
+            auto firstElement = dynamic_cast<Symbol*>(elements.front().get());
+            if (firstElement && firstElement->name == "print") {
+                parsePrint(elements);
+                return nullptr; 
+            }
+        }
+
         return std::make_shared<List>(elements);
     } else if (token.type == TokenType::NUMBER || token.type == TokenType::SYMBOL) {
         // Parse an atom
@@ -46,7 +63,6 @@ SExprPtr Parser::parseExpr() {
     } else {
         throw std::runtime_error("Unexpected token in expression: " + token.text);
     }
-
 }
 
 SExprPtr Parser::parseAtom() {
@@ -63,6 +79,24 @@ SExprPtr Parser::parseAtom() {
 }
 
 
+
+
+void Parser::parsePrint(const std::list<SExprPtr>& elements) {
+    if (elements.size() < 2) {
+        throw std::runtime_error("print expects at least one argument");
+    }
+    auto it = ++elements.begin(); // Skip the "print" symbol itself
+    for (; it != elements.end(); ++it) {
+        if (!*it) {
+            throw std::runtime_error("Null expression in print");
+        }
+        (*it)->print();
+        if (std::next(it) != elements.end()) {
+            std::cout << " ";
+        }
+    }
+    std::cout << std::endl;
+}
 
 
 

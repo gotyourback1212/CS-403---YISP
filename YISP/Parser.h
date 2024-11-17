@@ -9,15 +9,16 @@ class Parser {
 public:
     Parser(std::list<Token> tokens);
 
-    SExprPtr parseExpr();
-    SExprPtr parseAtom();
-
-private:
     std::list<Token> tokens;
 
     Token peek() const;
     Token get();
     void expect(TokenType type);
+
+    SExprPtr parseExpr();
+    SExprPtr parseAtom();
+
+    void parsePrint(const std::list<SExprPtr>& elements);
 };
 
 #endif // PARSER_H

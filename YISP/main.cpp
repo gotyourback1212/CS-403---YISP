@@ -19,8 +19,10 @@ void repl() {
             std::list <Token> tokens(tokenize(line));
             Parser parser(tokens);
             SExprPtr expr = parser.parseExpr();
-            expr->print();
-            std::cout << std::endl;
+            if (expr) { // Only call print if expr is not nullptr
+                expr->print();
+                std::cout << std::endl;
+            }
         } catch (const std::exception& e) {
             std::cerr << "Error: " << e.what() << std::endl;
         }
