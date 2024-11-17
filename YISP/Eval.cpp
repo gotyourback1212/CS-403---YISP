@@ -39,12 +39,30 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
                 return evalIsNum(*list); // Return TRUTH or NIL
             } else if (symbol->name == "LIST?") {
                 return evalIsList(*list); // Return TRUTH or NIL
+            } else if (symbol->name == "gt") {
+                return evalGt(*list); // Return TRUTH or NIL
+            } else if (symbol->name == "lt") {
+                return evalLt(*list); // Return TRUTH or NIL
+            } else if (symbol->name == "gte") {
+                return evalGte(*list); // Return TRUTH or NIL
+            } else if (symbol->name == "lte") {
+                return evalLte(*list); // Return TRUTH or NIL
             } else if(symbol->name == "cons"){
                 return evalCons(*list); //Return the results of cons
             } else if(symbol->name == "car"){
-                return evalCar(*list); //Return the results of cons
+                return evalCar(*list); //Return the results of car
             } else if(symbol->name == "cdr"){
-                return evalCdr(*list); //Return the results of cons
+                return evalCdr(*list); //Return the results of cdr
+            } else if (symbol->name == "+") {
+                return evalAdd(*list); // Handle addition
+            } else if (symbol->name == "-") {
+                return evalSub(*list); // Handle subtraction
+            } else if (symbol->name == "*") {
+                return evalMul(*list); // Handle multiplication
+            } else if (symbol->name == "/") {
+                return evalDiv(*list); // Handle division
+            } else if (symbol->name == "%") {
+                return evalMod(*list); // Handle modulo
             } else {
                 throw std::runtime_error("Unknown function: " + symbol->name);
             }
@@ -90,19 +108,19 @@ SExprPtr Eval::evalCons(const List& list) {
     }
 
     // Evaluate the first argument (head of the list)
-    auto head = evaluate(*std::next(list.elements.begin()));
+    auto car = evaluate(*std::next(list.elements.begin()));
 
     // Evaluate the second argument (tail of the list)
-    auto tail = evaluate(*std::next(list.elements.begin(), 2));
+    auto cdr = evaluate(*std::next(list.elements.begin(), 2));
 
     // Ensure the tail is a list or NIL
-    auto tailList = std::dynamic_pointer_cast<List>(tail);
-    if (!tailList && !std::dynamic_pointer_cast<Nil>(tail)) {
+    auto tailList = std::dynamic_pointer_cast<List>(cdr);
+    if (!tailList && !std::dynamic_pointer_cast<Nil>(cdr)) {
         throw std::runtime_error("The second argument to cons must be a list or NIL");
     }
 
     // Create the new list
-    std::list<SExprPtr> newElements = {head};
+    std::list<SExprPtr> newElements = {car};
     if (tailList) {
         newElements.insert(newElements.end(), tailList->elements.begin(), tailList->elements.end());
     }
@@ -161,7 +179,114 @@ SExprPtr Eval::evalCdr(const List& list) {
     std::list<SExprPtr> newElements(++argList->elements.begin(), argList->elements.end());
     return std::make_shared<List>(newElements);
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Evaluate 'gt' function
+SExprPtr Eval::evalGt(const List& list) {
+    std::cout << "Eval gt function" << std::endl; 
+    if (list.elements.size() != 3) {
+        throw std::runtime_error("gt expects exactly two arguments");
+    }
 
+    // Evaluate both arguments
+    auto it = std::next(list.elements.begin()); // Skip the "gt" symbol
+    SExprPtr firstArg = evaluate(*it);
+    SExprPtr secondArg = evaluate(*std::next(it));
+
+    // Ensure both arguments are numbers
+    auto firstNum = std::dynamic_pointer_cast<Number>(firstArg);
+    auto secondNum = std::dynamic_pointer_cast<Number>(secondArg);
+    if (!firstNum || !secondNum) {
+        throw std::runtime_error("gt expects both arguments to be numbers");
+    }
+
+    // Perform comparison
+    if (firstNum->value > secondNum->value) {
+        return TRUTH; // Return TRUTH if condition is satisfied
+    } else {
+        return NIL;   // Return NIL otherwise
+    }
+}
+
+//Evaluate 'lt' function
+SExprPtr Eval::evalLt(const List& list) {
+    std::cout << "Eval lt function" << std::endl;
+    if (list.elements.size() != 3) {
+        throw std::runtime_error("lt expects exactly two arguments");
+    }
+
+    // Evaluate both arguments
+    auto it = std::next(list.elements.begin()); // Skip the "lt" symbol
+    SExprPtr firstArg = evaluate(*it);
+    SExprPtr secondArg = evaluate(*std::next(it));
+
+    // Ensure both arguments are numbers
+    auto firstNum = std::dynamic_pointer_cast<Number>(firstArg);
+    auto secondNum = std::dynamic_pointer_cast<Number>(secondArg);
+    if (!firstNum || !secondNum) {
+        throw std::runtime_error("lt expects both arguments to be numbers");
+    }
+
+    // Perform comparison
+    if (firstNum->value < secondNum->value) {
+        return TRUTH; // Return TRUTH if condition is satisfied
+    } else {
+        return NIL;   // Return NIL otherwise
+    }
+}
+
+//Evaluate 'gte' function
+SExprPtr Eval::evalGte(const List& list) {
+    std::cout << "Eval gte function" << std::endl;
+    if (list.elements.size() != 3) {
+        throw std::runtime_error("gte expects exactly two arguments");
+    }
+
+    // Evaluate both arguments
+    auto it = std::next(list.elements.begin()); // Skip the "gte" symbol
+    SExprPtr firstArg = evaluate(*it);
+    SExprPtr secondArg = evaluate(*std::next(it));
+
+    // Ensure both arguments are numbers
+    auto firstNum = std::dynamic_pointer_cast<Number>(firstArg);
+    auto secondNum = std::dynamic_pointer_cast<Number>(secondArg);
+    if (!firstNum || !secondNum) {
+        throw std::runtime_error("gte expects both arguments to be numbers");
+    }
+
+    // Perform comparison
+    if (firstNum->value >= secondNum->value) {
+        return TRUTH; // Return TRUTH if condition is satisfied
+    } else {
+        return NIL;   // Return NIL otherwise
+    }
+}
+
+//Evaluate 'lte' function
+SExprPtr Eval::evalLte(const List& list) {
+    std::cout << "Eval lte function" << std::endl;
+    if (list.elements.size() != 3) {
+        throw std::runtime_error("lte expects exactly two arguments");
+    }
+
+    // Evaluate both arguments
+    auto it = std::next(list.elements.begin()); // Skip the "lte" symbol
+    SExprPtr firstArg = evaluate(*it);
+    SExprPtr secondArg = evaluate(*std::next(it));
+
+    // Ensure both arguments are numbers
+    auto firstNum = std::dynamic_pointer_cast<Number>(firstArg);
+    auto secondNum = std::dynamic_pointer_cast<Number>(secondArg);
+    if (!firstNum || !secondNum) {
+        throw std::runtime_error("lte expects both arguments to be numbers");
+    }
+
+    // Perform comparison
+    if (firstNum->value <= secondNum->value) {
+        return TRUTH; // Return TRUTH if condition is satisfied
+    } else {
+        return NIL;   // Return NIL otherwise
+    }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,4 +367,124 @@ SExprPtr Eval::evalIsList(const List& list) {
     } else {
         return NIL;   // Return NIL otherwise
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+SExprPtr Eval::evalAdd(const List& list) {
+    std::cout << "Eval add function" << std::endl; 
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("+ expects at least one argument");
+    }
+
+    int sum = 0;
+    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
+        SExprPtr arg = evaluate(*it);
+        auto number = std::dynamic_pointer_cast<Number>(arg);
+        if (!number) {
+            throw std::runtime_error("+ expects all arguments to be numbers");
+        }
+        sum += number->value;
+    }
+
+    return std::make_shared<Number>(sum);
+}
+
+
+SExprPtr Eval::evalSub(const List& list) {
+    std::cout << "Eval sub function" << std::endl; 
+    if (list.elements.size() < 3) {
+        throw std::runtime_error("- expects at least two arguments");
+    }
+
+    auto it = std::next(list.elements.begin());
+    SExprPtr firstArg = evaluate(*it);
+    auto firstNumber = std::dynamic_pointer_cast<Number>(firstArg);
+    if (!firstNumber) {
+        throw std::runtime_error("- expects all arguments to be numbers");
+    }
+
+    int result = firstNumber->value;
+    for (++it; it != list.elements.end(); ++it) {
+        SExprPtr arg = evaluate(*it);
+        auto number = std::dynamic_pointer_cast<Number>(arg);
+        if (!number) {
+            throw std::runtime_error("- expects all arguments to be numbers");
+        }
+        result -= number->value;
+    }
+
+    return std::make_shared<Number>(result);
+}
+
+
+SExprPtr Eval::evalMul(const List& list) {
+    std::cout << "Eval Mul function" << std::endl; 
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("* expects at least one argument");
+    }
+
+    int product = 1;
+    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
+        SExprPtr arg = evaluate(*it);
+        auto number = std::dynamic_pointer_cast<Number>(arg);
+        if (!number) {
+            throw std::runtime_error("* expects all arguments to be numbers");
+        }
+        product *= number->value;
+    }
+
+    return std::make_shared<Number>(product);
+}
+
+
+SExprPtr Eval::evalDiv(const List& list) {
+    std::cout << "Eval Div function" << std::endl; 
+    if (list.elements.size() < 3) {
+        throw std::runtime_error("/ expects at least two arguments");
+    }
+
+    auto it = std::next(list.elements.begin());
+    SExprPtr firstArg = evaluate(*it);
+    auto firstNumber = std::dynamic_pointer_cast<Number>(firstArg);
+    if (!firstNumber) {
+        throw std::runtime_error("/ expects all arguments to be numbers");
+    }
+
+    int result = firstNumber->value;
+    for (++it; it != list.elements.end(); ++it) {
+        SExprPtr arg = evaluate(*it);
+        auto number = std::dynamic_pointer_cast<Number>(arg);
+        if (!number) {
+            throw std::runtime_error("/ expects all arguments to be numbers");
+        }
+        if (number->value == 0) {
+            throw std::runtime_error("Division by zero");
+        }
+        result /= number->value;
+    }
+
+    return std::make_shared<Number>(result);
+}
+
+
+SExprPtr Eval::evalMod(const List& list) {
+    std::cout << "Eval Mod function" << std::endl;
+    if (list.elements.size() != 3) {
+        throw std::runtime_error("% expects exactly two arguments");
+    }
+
+    auto it = std::next(list.elements.begin());
+    SExprPtr firstArg = evaluate(*it);
+    SExprPtr secondArg = evaluate(*std::next(it));
+
+    auto firstNumber = std::dynamic_pointer_cast<Number>(firstArg);
+    auto secondNumber = std::dynamic_pointer_cast<Number>(secondArg);
+    if (!firstNumber || !secondNumber) {
+        throw std::runtime_error("% expects both arguments to be numbers");
+    }
+    if (secondNumber->value == 0) {
+        throw std::runtime_error("Modulo by zero");
+    }
+
+    return std::make_shared<Number>(firstNumber->value % secondNumber->value);
 }
