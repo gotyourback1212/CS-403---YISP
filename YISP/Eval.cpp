@@ -75,6 +75,10 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
             return evalEq(*list); // Return TRUTH or NIL
         } else if (symbol->name == "not") {
             return evalNot(*list); // Return TRUTH or NIL
+        } else if (symbol->name == "and") {
+            return evalAnd(*list); // Handle logical AND
+        } else if (symbol->name == "or") {
+            return evalOr(*list); // Handle logical OR
         } else if (symbol->name == "cons") {
             return evalCons(*list); // Return the results of cons
         } else if (symbol->name == "car") {
@@ -397,6 +401,38 @@ SExprPtr Eval::evalNot(const List& list) {
     // Return TRUTH if argument is NIL, otherwise return NIL
     return std::dynamic_pointer_cast<Nil>(argument) ? TRUTH : NIL;
 }
+
+
+SExprPtr Eval::evalAnd(const List& list) {
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("and expects at least one argument");
+    }
+
+    // Iterate over all arguments
+    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
+        SExprPtr result = evaluate(*it);
+        if (std::dynamic_pointer_cast<Nil>(result)) {
+            return NIL; // Short-circuit: if any value is NIL, return NIL immediately
+        }
+    }
+    return TRUTH; // If no value is NIL, return TRUTH
+}
+
+SExprPtr Eval::evalOr(const List& list) {
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("or expects at least one argument");
+    }
+
+    // Iterate over all arguments
+    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
+        SExprPtr result = evaluate(*it);
+        if (std::dynamic_pointer_cast<Truth>(result)) {
+            return TRUTH; // Short-circuit: if any value is TRUTH, return TRUTH immediately
+        }
+    }
+    return NIL; // If no value is TRUTH, return NIL
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
