@@ -66,10 +66,10 @@ SExprPtr Parser::parseExpr() {
 SExprPtr Parser::parseAtom() {
    Token token = get();
     if (token.type == TokenType::NUMBER) {
-        std::cout << "Parsing number" << std::endl;
+        //std::cout << "Parsing number" << std::endl;
         return std::make_shared<Number>(std::stoi(token.text));
     } else if (token.type == TokenType::SYMBOL) {
-        std::cout << "Parsing symbol" << std::endl;
+        //std::cout << "Parsing symbol" << std::endl;
         if (token.text == "nil") {
             return NIL; 
         } else if (token.text == "#T") {

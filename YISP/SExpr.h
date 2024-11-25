@@ -65,30 +65,3 @@ const SExprPtr TRUTH = std::make_shared<Truth>();
 
 #endif // SXPR_H
 
-/* 
-
-/
-class Cons : public SExpr { 
-    public: 
-        std::vector<SExprPtr> elements; 
-        Cons(const std::vector<SExprPtr>& elems) : elements(elems) {} 
-        void print() const override;  
-}
-
-// List (for convenience)
-
-*/ 
-
-
-/*
-// ConsCell
-class ConsCell : public SExpr {
-public:
-    SExprPtr car;
-    SExprPtr cdr;
-    ConsCell(SExprPtr a, SExprPtr d) : car(a), cdr(d) {}
-    void print() const override;
-};
-
-*/
-

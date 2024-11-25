@@ -2,11 +2,16 @@
 #define EVAL_H
 
 #include "SExpr.h"
+#include "Environment.h"
+
 #include <iostream>
 #include <stdexcept>
 
 class Eval {
 public:
+
+    Eval (EnvironmentPtr env) : environment(env) {}
+
     SExprPtr evaluate(const SExprPtr& expr);
 
     SExprPtr evalPrint(const List& list);
@@ -26,8 +31,8 @@ public:
 
     //Logical Functions
     SExprPtr evalNot(const List& list);
-    SExprPtr evalAnd(const List& list);
-    SExprPtr evalOr(const List& list);
+    //SExprPtr evalAnd(const List& list);
+    //SExprPtr evalOr(const List& list);
 
     //Math Functions
     SExprPtr evalAdd(const List& list); 
@@ -40,6 +45,15 @@ public:
     SExprPtr evalCons(const List& list); 
     SExprPtr evalCar(const List& list); 
     SExprPtr evalCdr(const List& list); 
+
+    //Define Funcitions
+    SExprPtr evalQuote(const List& list); 
+    SExprPtr evalEval(const List& list); 
+    SExprPtr evalSet(const List& list); 
+
+private: 
+    EnvironmentPtr environment; 
+
 };
 
 #endif // EVALR_H
