@@ -31,8 +31,8 @@ public:
 
     //Logical Functions
     SExprPtr evalNot(const List& list);
-    //SExprPtr evalAnd(const List& list);
-    //SExprPtr evalOr(const List& list);
+    SExprPtr evalAnd(const List& list);
+    SExprPtr evalOr(const List& list);
 
     //Math Functions
     SExprPtr evalAdd(const List& list); 

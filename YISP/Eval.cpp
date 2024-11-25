@@ -75,6 +75,10 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
             return evalEq(*list); // Return TRUTH or NIL
         } else if (symbol->name == "not") {
             return evalNot(*list); // Return TRUTH or NIL
+        } else if (symbol->name == "and") {
+            return evalAnd(*list); // Handle logical AND
+        } else if (symbol->name == "or") {
+            return evalOr(*list); // Handle logical OR
         } else if (symbol->name == "cons") {
             return evalCons(*list); // Return the results of cons
         } else if (symbol->name == "car") {
@@ -383,7 +387,7 @@ SExprPtr Eval::evalEq(const List& list) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Evaluate `not` function
+// Evaluate `and` function
 SExprPtr Eval::evalNot(const List& list) {
      //std::cout << "Eval nor function" << std::endl;
     if (list.elements.size() != 2) {
@@ -396,6 +400,38 @@ SExprPtr Eval::evalNot(const List& list) {
 
     // Return TRUTH if argument is NIL, otherwise return NIL
     return std::dynamic_pointer_cast<Nil>(argument) ? TRUTH : NIL;
+}
+
+// Evaluate `not` function
+SExprPtr Eval::evalAnd(const List& list) {
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("and expects at least one argument");
+    }
+
+    // Iterate over all arguments
+    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
+        SExprPtr result = evaluate(*it);
+        if (std::dynamic_pointer_cast<Nil>(result)) {
+            return NIL; // Short-circuit: if any value is NIL, return NIL immediately
+        }
+    }
+    return TRUTH; // If no value is NIL, return TRUTH
+}
+
+// Evaluate `or` function
+SExprPtr Eval::evalOr(const List& list) {
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("or expects at least one argument");
+    }
+
+    // Iterate over all arguments
+    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
+        SExprPtr result = evaluate(*it);
+        if (std::dynamic_pointer_cast<Truth>(result)) {
+            return TRUTH; // Short-circuit: if any value is TRUTH, return TRUTH immediately
+        }
+    }
+    return NIL; // If no value is TRUTH, return NIL
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -655,70 +691,6 @@ SExprPtr Eval::evalSet(const List& list) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-    } else if (symbol->name == "and") {
-        return evalAnd(*list); // Handle logical AND
-    } else if (symbol->name == "or") {
-        return evalOr(*list); // Handle logical OR
-
-    // Evaluate `and` function
-SExprPtr Eval::evalAnd(const List& list) {
-     //std::cout << "Eval and function" << std::endl;
-    if (list.elements.size() < 2) {
-        throw std::runtime_error("and expects at least one argument");
-    }
-
-    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
-        SExprPtr result = evaluate(*it);
-        if (std::dynamic_pointer_cast<Nil>(result)) {
-            return NIL; // If any argument is NIL, return NIL immediately
-        }
-    }
-
-    // Return the last non-NIL value
-    return TRUTH;
-}
-
-// Evaluate `or` function
-SExprPtr Eval::evalOr(const List& list) {
-     //std::cout << "Eval or function" << std::endl;
-    if (list.elements.size() < 2) {
-        throw std::runtime_error("or expects at least one argument");
-    }
-
-    for (auto it = std::next(list.elements.begin()); it != list.elements.end(); ++it) {
-        SExprPtr result = evaluate(*it);
-        if (!std::dynamic_pointer_cast<Nil>(result)) {
-            return TRUTH; // If any argument is non-NIL, return it immediately
-        }
-    }
-
-    // If all arguments are NIL, return NIL
-    return NIL;
-}
-
-
-
-
-
-*/ 
-
-
-
  /* For debugging 
     // Check if both are TRUTH
     if (secondArg == TRUTH) {
@@ -734,4 +706,4 @@ SExprPtr Eval::evalOr(const List& list) {
     } else {
         std::cout << "Second Arg: unknown type" << std::endl;
     }
-    */ 
+*/ 
