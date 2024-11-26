@@ -32,6 +32,7 @@ public:
     SExprPtr evalAnd(const List& list);
     SExprPtr evalOr(const List& list);
     SExprPtr evalIf(const List& list);
+    SExprPtr evalCond(const List& list); 
 
     //Math Functions
     SExprPtr evalAdd(const List& list); 

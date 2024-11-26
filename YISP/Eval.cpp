@@ -78,7 +78,9 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
         } else if (symbol->name == "or") {
             return evalOr(*list); // Handle logical OR
         } else if (symbol->name == "if") {
-            return evalIf(*list); // Handle logical OR
+            return evalIf(*list); // Handle logical IF
+         } else if (symbol->name == "cond") {
+            return evalCond(*list); // Handle logical COND
         } else if (symbol->name == "cons") {
             return evalCons(*list); // Return the results of cons
         } else if (symbol->name == "car") {
@@ -427,6 +429,39 @@ SExprPtr Eval::evalIf(const List& list) {
     }
 }
 
+// Evaluate `cond` function
+SExprPtr Eval::evalCond(const List& list) {
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("cond expects at least one condition-action pair");
+    }
+
+    // Iterate through all condition-action pairs
+    auto it = std::next(list.elements.begin()); // Skip the "cond" symbol
+
+    while (it != list.elements.end()) {
+        // Ensure each element is a list of two elements
+        auto pair = std::dynamic_pointer_cast<List>(*it);
+        if (!pair || pair->elements.size() != 2) {
+            throw std::runtime_error("cond expects each condition-action pair to be a list of two elements");
+        }
+
+        // Extract the condition and expression
+        auto condition = pair->elements.front();
+        auto action = *std::next(pair->elements.begin());
+
+        // Evaluate the condition
+        SExprPtr conditionResult = evaluate(condition);
+        if (!std::dynamic_pointer_cast<Nil>(conditionResult)) {
+            // If the condition is truthy, evaluate and return the action
+            return evaluate(action);
+        }
+
+        ++it;
+    }
+
+    // If no conditions are true, return nil (undefined behavior by default)
+    return NIL;
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Evaluate `NIL?` function
