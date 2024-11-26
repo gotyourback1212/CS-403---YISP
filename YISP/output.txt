@@ -1,0 +1,65 @@
+(ARITHETIC OPERATIONS)
+true
+true
+true
+true
+true
+true
+(COMPARISIONS OPERATIONS)
+true
+true
+true
+nil
+true
+true
+true
+(LOGICAL OPERATIONS)
+true
+nil
+true
+nil
+nil
+true
+(CONDITONALS)
+true
+true
+true
+true
+(COND)
+true
+true
+(LIST OPERATIONS (CONS, CAR, CDR))
+true
+true
+(TYPE CHECKS (SYM?, NUM?, LIST?, NIL?))
+true
+nil
+true
+nil
+true
+nil
+true
+nil
+(USER DEFINED FUNCTIONS)
+true
+true
+true
+true
+true
+true
+(QUOTING)
+true
+nil
+(EVALUATING)
+true
+true
+true
+true
+true
+(USER DEFINED FUNCTIONS USING COND and LOGICAL OPERATIONS)
+true
+true
+true
+true
+true
+nil

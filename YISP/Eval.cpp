@@ -309,23 +309,23 @@ SExprPtr Eval::evalLte(const List& list) {
 
 //Evaluate 'eq' function
 SExprPtr Eval::evalEq(const List& list) {
-     if (list.elements.size() != 3) {
+    if (list.elements.size() != 3) {
         throw std::runtime_error("eq expects exactly two arguments");
     }
 
     // Evaluate both arguments
-    auto it = std::next(list.elements.begin());
+    auto it = std::next(list.elements.begin()); // Skip the "eq" symbol
     SExprPtr firstArg = evaluate(*it);
     SExprPtr secondArg = evaluate(*std::next(it));
 
     // Check if both are NIL
-    if (firstArg == NIL && secondArg == NIL) {
-        return TRUTH;
+    if (std::dynamic_pointer_cast<Nil>(firstArg) && std::dynamic_pointer_cast<Nil>(secondArg)) {
+        return TRUTH; // Both are nil
     }
 
     // Check if both are TRUTH
-    if (firstArg == TRUTH && secondArg == TRUTH) {
-        return TRUTH;
+    if (std::dynamic_pointer_cast<Truth>(firstArg) && std::dynamic_pointer_cast<Truth>(secondArg)) {
+        return TRUTH; // Both are true
     }
 
     // Check if both arguments are numbers
@@ -342,27 +342,28 @@ SExprPtr Eval::evalEq(const List& list) {
         return (firstSym->name == secondSym->name) ? TRUTH : NIL;
     }
 
-    // Check if both are lists and compare their elements
+    // Check if both are lists and compare their elements recursively
     auto firstList = std::dynamic_pointer_cast<List>(firstArg);
     auto secondList = std::dynamic_pointer_cast<List>(secondArg);
     if (firstList && secondList) {
         if (firstList->elements.size() != secondList->elements.size()) {
-            return NIL;
+            return NIL; // Different sizes, not equal
         }
 
         auto it1 = firstList->elements.begin();
         auto it2 = secondList->elements.begin();
         while (it1 != firstList->elements.end() && it2 != secondList->elements.end()) {
-            if (evaluate(*it1) != evaluate(*it2)) {
-                return NIL;
+            SExprPtr result = evalEq(List({std::make_shared<Symbol>("eq"), *it1, *it2}));
+            if (result == NIL) {
+                return NIL; // If any element pair is not equal, return NIL
             }
             ++it1;
             ++it2;
         }
-        return TRUTH;
+        return TRUTH; // All elements are equal
     }
 
-    // If arguments are not comparable
+    // If arguments are not comparable, return NIL
     return NIL;
 }
 
@@ -714,7 +715,7 @@ SExprPtr Eval::evalSet(const List& list) {
     // Set the value in the environment
     environment->set(symbol->name, value);
 
-    return value; // Return the value that was set
+    return nullptr; // Return the value that was set
 }
 
 // Evaluate `fun` function
@@ -760,7 +761,7 @@ SExprPtr Eval::evalFun(const List& list) {
     // Define the function in the function environment
     functionEnvironment->define(name, args, body);
 
-    return NIL; // Return NIL for function definition
+    return nullptr; // Return NIL for function definition
 }
 
 // Evaluate user defined functions 
