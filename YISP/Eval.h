@@ -14,8 +14,6 @@ public:
 
     SExprPtr evaluate(const SExprPtr& expr);
 
-    SExprPtr evalPrint(const List& list);
-
     //Predicate Functions
     SExprPtr evalIsNil(const List& list); 
     SExprPtr evalIsSym(const List& list); 
@@ -33,6 +31,7 @@ public:
     SExprPtr evalNot(const List& list);
     SExprPtr evalAnd(const List& list);
     SExprPtr evalOr(const List& list);
+    SExprPtr evalIf(const List& list);
 
     //Math Functions
     SExprPtr evalAdd(const List& list); 

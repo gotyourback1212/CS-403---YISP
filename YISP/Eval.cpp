@@ -53,9 +53,7 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
         }
 
         // Handle special forms
-        if (symbol->name == "print") {
-            return evalPrint(*list); // Return the result of print
-        } else if (symbol->name == "NIL?") {
+        if (symbol->name == "NIL?") {
             return evalIsNil(*list); // Return TRUTH or NIL
         } else if (symbol->name == "SYM?") {
             return evalIsSym(*list); // Return TRUTH or NIL
@@ -79,6 +77,8 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
             return evalAnd(*list); // Handle logical AND
         } else if (symbol->name == "or") {
             return evalOr(*list); // Handle logical OR
+        } else if (symbol->name == "if") {
+            return evalIf(*list); // Handle logical OR
         } else if (symbol->name == "cons") {
             return evalCons(*list); // Return the results of cons
         } else if (symbol->name == "car") {
@@ -108,32 +108,6 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
 
     // Atomic values (Symbol, Number, etc.) evaluate to themselves
     return expr;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Evaluate `print` function
-SExprPtr Eval::evalPrint(const List& list) {
-    //std::cout << "Eval print function" << std::endl; 
-    if (list.elements.size() < 2) {
-        throw std::runtime_error("print expects at least one argument");
-    }
-
-    SExprPtr lastResult = NIL; // Default to NIL if no arguments
-
-    // Iterate through all arguments, evaluate them, and print results
-    auto it = std::next(list.elements.begin()); // Skip the "print" symbol
-    for (; it != list.elements.end(); ++it) {
-        lastResult = evaluate(*it); // Fully evaluate the result
-        lastResult->print();        // Print the evaluated result
-        if (std::next(it) != list.elements.end()) {
-            //std::cout << " ";
-        }
-    }
-    //std::cout << std::endl; // Add newline after printing all arguments
-
-    return lastResult; // Return the last evaluated result
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -432,6 +406,25 @@ SExprPtr Eval::evalOr(const List& list) {
         }
     }
     return NIL; // If no value is TRUTH, return NIL
+}
+
+// Evaluate `if` function
+SExprPtr Eval::evalIf(const List& list) {
+    if (list.elements.size() != 4) {
+        throw std::runtime_error("if expects exactly three arguments: (if condition then else)");
+    }
+
+    // Evaluate the condition (e1)
+    auto it = std::next(list.elements.begin()); // Skip the "if" symbol
+    SExprPtr condition = evaluate(*it);
+
+    if (!std::dynamic_pointer_cast<Nil>(condition)) {
+        // Condition is truthy, evaluate and return e2
+        return evaluate(*std::next(it));
+    } else {
+        // Condition is falsy (nil), evaluate and return e3
+        return evaluate(*std::next(it, 2));
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

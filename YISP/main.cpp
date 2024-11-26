@@ -8,7 +8,7 @@
 #include <list>
 
 void processLine(const std::string& line, Eval& eval) {
-   try {
+    try {
         // Tokenize the input line
         std::list<Token> tokens = tokenize(line);
 
@@ -17,12 +17,17 @@ void processLine(const std::string& line, Eval& eval) {
             return;
         }
 
-        // Parse and evaluate the expression
+        // Parse the expression
         Parser parser(tokens);
         SExprPtr expr = parser.parseExpr();
+
+        // Evaluate and print the expression result
         if (expr) {
-            eval.evaluate(expr); // Evaluate the parsed expression
-            std::cout << std::endl; 
+            SExprPtr result = eval.evaluate(expr);
+            if (result) {
+                result->print();
+                std::cout << std::endl;
+            }
         }
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
