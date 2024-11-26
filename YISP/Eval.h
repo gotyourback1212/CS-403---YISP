@@ -10,8 +10,8 @@
 class Eval {
 public:
 
-    Eval (EnvironmentPtr env) : environment(env) {}
-
+    Eval (EnvironmentPtr env, FunctionEnvironmentPtr funcEnv) : environment(env), functionEnvironment(funcEnv) {}
+    
     SExprPtr evaluate(const SExprPtr& expr);
 
     //Predicate Functions
@@ -50,10 +50,15 @@ public:
     SExprPtr evalQuote(const List& list); 
     SExprPtr evalEval(const List& list); 
     SExprPtr evalSet(const List& list); 
+    SExprPtr evalFun(const List& list);
+    SExprPtr evalUserFun(const std::string& name, const List& list);
 
 private: 
-    EnvironmentPtr environment; 
+    EnvironmentPtr environment;
+    FunctionEnvironmentPtr functionEnvironment;
 
 };
+
+using EvalPtr = std::shared_ptr<Eval>;
 
 #endif // EVALR_H

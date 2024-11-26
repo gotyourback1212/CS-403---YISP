@@ -36,7 +36,9 @@ void processLine(const std::string& line, Eval& eval) {
 
 void repl(const std::string& filename = "") {
     EnvironmentPtr env = std::make_shared<Environment>();
-    Eval eval(env);
+    FunctionEnvironmentPtr funcEnv = std::make_shared<FunctionEnvironment>();
+    
+    Eval eval (env, funcEnv);
     
     if (!filename.empty()) {
         // Read expressions from the file

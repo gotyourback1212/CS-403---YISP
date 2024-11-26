@@ -52,6 +52,7 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
             throw std::runtime_error("Expected a symbol as the first element of a list");
         }
 
+      
         // Handle special forms
         if (symbol->name == "NIL?") {
             return evalIsNil(*list); // Return TRUTH or NIL
@@ -93,6 +94,8 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
             return evalEval(*list); // Return the results of Sexpression 
         } else if (symbol->name == "set") {
             return evalSet(*list); // Return the results of Sexpression 
+        } else if (symbol->name == "defun") {
+            return evalFun(*list); // Return user defined funciton
         } else if (symbol->name == "+" || symbol->name == "add") {
             return evalAdd(*list); // Handle addition
         } else if (symbol->name == "-" || symbol->name == "minus") {
@@ -103,6 +106,8 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
             return evalDiv(*list); // Handle division
         } else if (symbol->name == "%" || symbol->name == "mod") {
             return evalMod(*list); // Handle modulo
+        } else if(functionEnvironment->hasFunction(symbol->name)){ 
+            return evalUserFun(symbol->name, *list);
         } else {
             throw std::runtime_error("Unknown function: " + symbol->name);
         }
@@ -690,7 +695,7 @@ SExprPtr Eval::evalEval(const List& list) {
     return evaluate(argument);
 }
 
-
+// Evaluate `set` function
 SExprPtr Eval::evalSet(const List& list) {
     if (list.elements.size() != 3) {
         throw std::runtime_error("set expects exactly two arguments");
@@ -711,6 +716,95 @@ SExprPtr Eval::evalSet(const List& list) {
 
     return value; // Return the value that was set
 }
+
+// Evaluate `fun` function
+SExprPtr Eval::evalFun(const List& list) {
+     if (list.elements.size() != 4) {
+        throw std::runtime_error("defun expects exactly three arguments: (defun name (args) body)");
+    }
+
+    // Use an iterator to access the elements in the list
+    auto it = list.elements.begin();
+
+    // Skip the "defun" symbol itself
+    ++it;
+
+    // Extract the function name
+    auto nameSym = std::dynamic_pointer_cast<Symbol>(*it);
+    if (!nameSym) {
+        throw std::runtime_error("Function name must be a symbol");
+    }
+    std::string name = nameSym->name;
+
+    // Move to the argument list
+    ++it;
+    auto argsList = std::dynamic_pointer_cast<List>(*it);
+    if (!argsList) {
+        throw std::runtime_error("Function arguments must be a list");
+    }
+
+    // Extract the argument symbols
+    std::list<std::string> args;
+    for (const auto& arg : argsList->elements) {
+        auto argSym = std::dynamic_pointer_cast<Symbol>(arg);
+        if (!argSym) {
+            throw std::runtime_error("Function arguments must be symbols");
+        }
+        args.push_back(argSym->name);
+    }
+
+    // Move to the function body
+    ++it;
+    SExprPtr body = *it;
+
+    // Define the function in the function environment
+    functionEnvironment->define(name, args, body);
+
+    return NIL; // Return NIL for function definition
+}
+
+// Evaluate user defined functions 
+SExprPtr Eval::evalUserFun(const std::string& name, const List& list) {
+    // Get the function definition
+    auto [args, body] = functionEnvironment->getFunction(name);
+
+    if (list.elements.size() - 1 != args.size()) {
+        throw std::runtime_error("Incorrect number of arguments for function: " + name);
+    }
+
+    // Evaluate the arguments
+    auto it = std::next(list.elements.begin());
+    std::list<SExprPtr> argValues;
+    for (; it != list.elements.end(); ++it) {
+        argValues.push_back(evaluate(*it));
+    }
+
+    // Create a new environment for function call and bind arguments
+    EnvironmentPtr localEnv = std::make_shared<Environment>();
+    auto argIt = args.begin();
+    auto valIt = argValues.begin();
+    while (argIt != args.end() && valIt != argValues.end()) {
+        localEnv->set(*argIt, *valIt);
+        ++argIt;
+        ++valIt;
+    }
+
+    // Push the local environment onto the stack
+    EnvironmentPtr previousEnv = environment;
+    environment = localEnv;
+
+    // Evaluate the body
+    SExprPtr result = evaluate(body);
+
+    // Pop the environment off the stack
+    environment = previousEnv;
+
+    return result;
+}
+
+
+
+
 
 
 
