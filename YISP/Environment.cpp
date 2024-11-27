@@ -14,6 +14,12 @@ SExprPtr Environment::get(const std::string& name) const {
     if (it != bindings.end()) {
         return it->second;
     } 
+
+    // If not found in current environment, check the parent environment
+    if (parent) {
+        return parent->get(name);
+    }
+
     return nullptr; 
 
 }

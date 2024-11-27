@@ -10,13 +10,14 @@
 
 class Environment {
 public:
-    Environment() {}
+     Environment(std::shared_ptr<Environment> parent = nullptr) : parent(parent) {}
 
     void set(const std::string& name, const SExprPtr& value);
     SExprPtr get(const std::string& name) const;
 
 private:
     std::unordered_map<std::string, SExprPtr> bindings;
+    std::shared_ptr<Environment> parent;
 };
 
 // Class for storing functions

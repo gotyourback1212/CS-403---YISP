@@ -48,23 +48,66 @@ void repl(const std::string& filename = "") {
             return;
         }
 
+        std::string input;
         std::string line;
+        int parenCount = 0;
+
         while (std::getline(file, line)) {
-            processLine(line, eval);
+            input += line + " ";  // Accumulate the line in the input buffer
+
+            // Update parentheses count
+            for (char c : line) {
+                if (c == '(') {
+                    ++parenCount;
+                } else if (c == ')') {
+                    --parenCount;
+                }
+            }
+
+            // If all parentheses are closed, process the input
+            if (parenCount == 0 && !input.empty()) {
+                processLine(input, eval);
+                input.clear();  // Clear input after successful processing
+            }
         }
+
+        // In case there is remaining input after the file ends
+        if (parenCount != 0) {
+            std::cerr << "Error: Unmatched parentheses in input" << std::endl;
+        }
+
     } else {
         // Interactive REPL
         std::cout << "Lisp Interpreter REPL. Type 'exit' to quit.\n";
-        std::string line;
+        std::string input;
+        int parenCount = 0;
+
         while (true) {
-            std::cout << ">>> ";
+            std::cout << ((parenCount > 0) ? "... " : ">>> ");
+            std::string line;
             if (!std::getline(std::cin, line)) {
                 break;
             }
             if (line == "exit") {
                 break;
             }
-            processLine(line, eval);
+
+            input += line + " ";  // Add the line to the input buffer
+
+            // Update parentheses count
+            for (char c : line) {
+                if (c == '(') {
+                    ++parenCount;
+                } else if (c == ')') {
+                    --parenCount;
+                }
+            }
+
+            // If all parentheses are closed, process the input
+            if (parenCount == 0 && !input.empty()) {
+                processLine(input, eval);
+                input.clear();  // Clear input after successful processing
+            }
         }
     }
 }

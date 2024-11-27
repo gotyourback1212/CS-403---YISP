@@ -720,7 +720,7 @@ SExprPtr Eval::evalSet(const List& list) {
 
 // Evaluate `fun` function
 SExprPtr Eval::evalFun(const List& list) {
-     if (list.elements.size() != 4) {
+    if (list.elements.size() != 4) {
         throw std::runtime_error("defun expects exactly three arguments: (defun name (args) body)");
     }
 
@@ -740,18 +740,22 @@ SExprPtr Eval::evalFun(const List& list) {
     // Move to the argument list
     ++it;
     auto argsList = std::dynamic_pointer_cast<List>(*it);
-    if (!argsList) {
-        throw std::runtime_error("Function arguments must be a list");
-    }
 
-    // Extract the argument symbols
+    // Extract the argument symbols if argsList is a valid list
     std::list<std::string> args;
-    for (const auto& arg : argsList->elements) {
-        auto argSym = std::dynamic_pointer_cast<Symbol>(arg);
-        if (!argSym) {
-            throw std::runtime_error("Function arguments must be symbols");
+    if (argsList) {
+        for (const auto& arg : argsList->elements) {
+            auto argSym = std::dynamic_pointer_cast<Symbol>(arg);
+            if (!argSym) {
+                throw std::runtime_error("Function arguments must be symbols");
+            }
+            args.push_back(argSym->name);
         }
-        args.push_back(argSym->name);
+    } else {
+        // If argsList is not a valid list, we need to handle an empty argument scenario
+        if (!std::dynamic_pointer_cast<Nil>(*it)) {
+            throw std::runtime_error("Function arguments must be a list or nil for no arguments");
+        }
     }
 
     // Move to the function body
@@ -781,7 +785,7 @@ SExprPtr Eval::evalUserFun(const std::string& name, const List& list) {
     }
 
     // Create a new environment for function call and bind arguments
-    EnvironmentPtr localEnv = std::make_shared<Environment>();
+    EnvironmentPtr localEnv = std::make_shared<Environment>(environment); // Set the parent to the current environment
     auto argIt = args.begin();
     auto valIt = argValues.begin();
     while (argIt != args.end() && valIt != argValues.end()) {

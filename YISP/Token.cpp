@@ -15,6 +15,7 @@ std::list<Token> tokenize(const std::string& input) {
         }
         // Skip comments
         else if (input[i] == ';') {
+            // Skip until the end of the line or input
             while (i < input.length() && input[i] != '\n') {
                 ++i;
             }
@@ -29,39 +30,30 @@ std::list<Token> tokenize(const std::string& input) {
             tokens.push_back({TokenType::RPAREN, ")"});
             ++i;
         }
+        // Negative numbers or alphanumeric tokens
+        else if (std::isdigit(input[i]) || (input[i] == '-' && i + 1 < input.length() && std::isdigit(input[i + 1]))) {
+            // Handle numbers including negative numbers
+            size_t start = i;
+            if (input[i] == '-') {
+                ++i; // Move past the negative sign
+            }
+            while (i < input.length() && std::isdigit(input[i])) {
+                ++i;
+            }
+            tokens.push_back({TokenType::NUMBER, input.substr(start, i - start)});
+        }
         // Alphanumeric or symbol token
         else {
             size_t start = i;
-            while (i < input.length() && 
-                   !std::isspace(input[i]) && 
-                   input[i] != '(' && 
-                   input[i] != ')' && 
+            while (i < input.length() &&
+                   !std::isspace(input[i]) &&
+                   input[i] != '(' &&
+                   input[i] != ')' &&
                    input[i] != ';') {
                 ++i;
             }
             std::string token = input.substr(start, i - start);
-
-            // Recognize special constants
-            if (token == "#T") {
-                tokens.push_back({TokenType::SYMBOL, "#T"});
-            } else if (token == "nil") {
-                tokens.push_back({TokenType::SYMBOL, "nil"});
-            } else {
-                // Determine if the token is a number
-                bool isNumber = true;
-                for (char c : token) {
-                    if (!std::isdigit(c)) {
-                        isNumber = false;
-                        break;
-                    }
-                }
-
-                if (isNumber) {
-                    tokens.push_back({TokenType::NUMBER, token});
-                } else {
-                    tokens.push_back({TokenType::SYMBOL, token});
-                }
-            }
+            tokens.push_back({TokenType::SYMBOL, token});
         }
     }
 
