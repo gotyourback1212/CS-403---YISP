@@ -54,7 +54,9 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
 
       
         // Handle special forms
-        if (symbol->name == "NIL?") {
+        if (symbol->name == "print") {
+            return evalPrint(*list); // Return the result of print
+        } else if (symbol->name == "NIL?") {
             return evalIsNil(*list); // Return TRUTH or NIL
         } else if (symbol->name == "SYM?") {
             return evalIsSym(*list); // Return TRUTH or NIL

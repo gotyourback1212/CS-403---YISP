@@ -14,6 +14,9 @@ public:
     
     SExprPtr evaluate(const SExprPtr& expr);
 
+    //Print Function FOR TESTING PURUPOSES 
+    SExprPtr evalPrint(const List& list); 
+
     //Predicate Functions
     SExprPtr evalIsNil(const List& list); 
     SExprPtr evalIsSym(const List& list); 
