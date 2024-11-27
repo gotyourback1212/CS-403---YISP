@@ -28,6 +28,9 @@ void List::print() const {
     std::cout << ")";
 }
 
+void String::print() const {
+    std::cout << value;
+}
 
 
 

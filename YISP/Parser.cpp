@@ -68,6 +68,9 @@ SExprPtr Parser::parseAtom() {
     if (token.type == TokenType::NUMBER) {
         //std::cout << "Parsing number" << std::endl;
         return std::make_shared<Number>(std::stoi(token.text));
+    } else if (token.type == TokenType::STRING) {
+        std::cout << "Parsing string" << std::endl;
+        return std::make_shared<String>(token.text);
     } else if (token.type == TokenType::SYMBOL) {
         //std::cout << "Parsing symbol" << std::endl;
         if (token.text == "nil") {

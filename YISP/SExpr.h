@@ -38,6 +38,14 @@ class Atom : public SExpr {};
             bool isTruthy() const override { return name != "nil"; }
     };
 
+    // String Atom FOR TESTING PURPOSES ONLY 
+    class String : public Atom {
+    public:
+        std::string value;
+        String(const std::string& val) : value(val) {}
+        void print() const override;
+        bool isTruthy() const override { return !value.empty(); }
+    };
 
 
 class List : public SExpr {

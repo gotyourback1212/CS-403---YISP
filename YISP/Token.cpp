@@ -20,6 +20,19 @@ std::list<Token> tokenize(const std::string& input) {
                 ++i;
             }
         }
+
+        // Handle quoted strings FOR TESTING PURPOSES ONLY 
+        else if (input[i] == '"') {
+            size_t start = i++;
+            while (i < input.length() && input[i] != '"') {
+                ++i;
+            }
+            if (i < input.length()) {
+                ++i; // Include the closing quote
+            }
+            tokens.push_back({TokenType::STRING, input.substr(start, i - start)});
+        }
+
         // Left parenthesis
         else if (input[i] == '(') {
             tokens.push_back({TokenType::LPAREN, "("});
@@ -49,11 +62,27 @@ std::list<Token> tokenize(const std::string& input) {
                    !std::isspace(input[i]) &&
                    input[i] != '(' &&
                    input[i] != ')' &&
-                   input[i] != ';') {
+                   input[i] != ';' &&
+                   input[i] != '"') {
                 ++i;
             }
+
             std::string token = input.substr(start, i - start);
-            tokens.push_back({TokenType::SYMBOL, token});
+            
+            // Determine if the token is a number or symbol
+            bool isNumber = true;
+            for (char c : token) {
+                if (!std::isdigit(c)) {
+                    isNumber = false;
+                    break;
+                }
+            }
+
+            if (isNumber) {
+                tokens.push_back({TokenType::NUMBER, token});
+            } else {
+                tokens.push_back({TokenType::SYMBOL, token});
+            }
         }
     }
 
