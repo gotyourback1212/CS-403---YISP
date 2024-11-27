@@ -8,7 +8,7 @@
 #include <list>
 
 void processLine(const std::string& line, Eval& eval) {
-    try {
+   try {
         // Tokenize the input line
         std::list<Token> tokens = tokenize(line);
 
@@ -21,18 +21,25 @@ void processLine(const std::string& line, Eval& eval) {
         Parser parser(tokens);
         SExprPtr expr = parser.parseExpr();
 
-        // Evaluate and print the expression result
+        // Evaluate the expression
         if (expr) {
             SExprPtr result = eval.evaluate(expr);
-            if (result) {
-                result->print();
-                std::cout << std::endl;
+            
+            // Only print the result if it's not a `print` function, as `print` already handles output
+            auto list = std::dynamic_pointer_cast<List>(expr);
+            if (!list || !std::dynamic_pointer_cast<Symbol>(list->elements.front()) ||
+                std::dynamic_pointer_cast<Symbol>(list->elements.front())->name != "print") {
+                if (result) {
+                    result->print();
+                    std::cout << std::endl;
+                }
             }
         }
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
     }
 }
+
 
 void repl(const std::string& filename = "") {
     EnvironmentPtr env = std::make_shared<Environment>();

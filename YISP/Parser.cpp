@@ -54,7 +54,7 @@ SExprPtr Parser::parseExpr() {
         expect(TokenType::RPAREN);
 
         return std::make_shared<List>(elements);
-    } else if (token.type == TokenType::NUMBER || token.type == TokenType::SYMBOL) {
+    } else if (token.type == TokenType::NUMBER || token.type == TokenType::SYMBOL || token.type == TokenType::STRING) {
         // Parse an atom
         tokens.push_front(token); // Put the token back for parseAtom
         return parseAtom();
@@ -69,7 +69,7 @@ SExprPtr Parser::parseAtom() {
         //std::cout << "Parsing number" << std::endl;
         return std::make_shared<Number>(std::stoi(token.text));
     } else if (token.type == TokenType::STRING) {
-        std::cout << "Parsing string" << std::endl;
+        //std::cout << "Parsing string" << std::endl;
         return std::make_shared<String>(token.text);
     } else if (token.type == TokenType::SYMBOL) {
         //std::cout << "Parsing symbol" << std::endl;

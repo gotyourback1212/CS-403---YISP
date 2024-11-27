@@ -39,6 +39,11 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
         }
     }
 
+    // Handle String literals
+    if (auto stringExpr = std::dynamic_pointer_cast<String>(expr)) {
+        return stringExpr; // Return the string itself
+    }
+
     // Handle List
     if (auto list = std::dynamic_pointer_cast<List>(expr)) {
         if (list->elements.empty()) {
@@ -117,6 +122,30 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
 
     // Atomic values (Symbol, Number, etc.) evaluate to themselves
     return expr;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Evaluate `print` function
+SExprPtr Eval::evalPrint(const List& list) {
+    if (list.elements.size() < 2) {
+        throw std::runtime_error("print expects at least one argument");
+    }
+
+    SExprPtr lastResult = NIL; // Default to NIL if no arguments
+
+    // Iterate through all arguments, evaluate them, and print results
+    auto it = std::next(list.elements.begin()); // Skip the "print" symbol
+    for (; it != list.elements.end(); ++it) {
+        lastResult = evaluate(*it); // Fully evaluate the result
+        lastResult->print();        // Print the evaluated result
+        if (std::next(it) != list.elements.end()) {
+            std::cout << "\t"; // Add a tab between outputs if there are multiple arguments
+        }
+    }
+    std::cout << std::endl; // Add newline after printing all arguments
+
+    return lastResult; // Return the last evaluated result
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

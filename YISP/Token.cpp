@@ -2,7 +2,7 @@
 #include <cctype>
 #include <list>
 #include <string>
-#include <iostream> 
+#include <iostream>
 
 std::list<Token> tokenize(const std::string& input) {
     std::list<Token> tokens;
@@ -21,16 +21,22 @@ std::list<Token> tokenize(const std::string& input) {
             }
         }
 
-        // Handle quoted strings FOR TESTING PURPOSES ONLY 
+        // Handle quoted strings
         else if (input[i] == '"') {
-            size_t start = i++;
+            ++i; // Move past the opening quote
+            std::string strValue;
+
             while (i < input.length() && input[i] != '"') {
+                strValue += input[i];
                 ++i;
             }
-            if (i < input.length()) {
+
+            if (i < input.length() && input[i] == '"') {
                 ++i; // Include the closing quote
+                tokens.push_back({TokenType::STRING, strValue});
+            } else {
+                throw std::runtime_error("Unterminated string literal");
             }
-            tokens.push_back({TokenType::STRING, input.substr(start, i - start)});
         }
 
         // Left parenthesis
@@ -38,24 +44,25 @@ std::list<Token> tokenize(const std::string& input) {
             tokens.push_back({TokenType::LPAREN, "("});
             ++i;
         }
+        
         // Right parenthesis
         else if (input[i] == ')') {
             tokens.push_back({TokenType::RPAREN, ")"});
             ++i;
         }
-        // Negative numbers or alphanumeric tokens
-        else if (std::isdigit(input[i]) || (input[i] == '-' && i + 1 < input.length() && std::isdigit(input[i + 1]))) {
-            // Handle numbers including negative numbers
+
+        // Negative numbers (standalone)
+        else if (input[i] == '-' && i + 1 < input.length() && std::isdigit(input[i + 1])) {
+            // Handle negative numbers
             size_t start = i;
-            if (input[i] == '-') {
-                ++i; // Move past the negative sign
-            }
+            ++i; // Move past the negative sign
             while (i < input.length() && std::isdigit(input[i])) {
                 ++i;
             }
             tokens.push_back({TokenType::NUMBER, input.substr(start, i - start)});
         }
-        // Alphanumeric or symbol token
+
+        // Alphanumeric or symbol token (including symbols starting with digits)
         else {
             size_t start = i;
             while (i < input.length() &&
@@ -78,6 +85,7 @@ std::list<Token> tokenize(const std::string& input) {
                 }
             }
 
+            // If the token is purely numeric, treat it as a number; otherwise, treat it as a symbol
             if (isNumber) {
                 tokens.push_back({TokenType::NUMBER, token});
             } else {
