@@ -90,7 +90,7 @@
                     (passFail (+ 10 5) 15) ; Expected Output: PASSED
                 </pre>
             </ul>
-             <p> Below is just few sample test cases that have been ran. Additional test cases can be seen by running the testCases.lisp file. The results can be seen in the testResults.txt file.</p>
+             <p> Below is just few sample test cases that have been ran. Additional test cases can be seen by running the testCases.lisp file. The results can be seen in the testResults.txt file. I also implemented a print function and Strings for testing purposes only.</p>
         <details style="margin-left: 20px;">
             <summary><strong>Arithmetic Operations</strong></summary>
             <ul>
