@@ -7,18 +7,23 @@
     <p><strong>CWID:</strong> 12137238</p>
     <h2>Introduction</h2>
     <p>This Lisp interpreter was implemented to demonstrate the basics of Lisp language features, including arithmetic operations, logical operations, conditionals, list operations, and user-defined functions.</p>
+    <p>To run the interpreter, compile it with the following command (ensure you have C++17 or later):</p>
+    <pre><code>make</code></pre>
+    <p>Once compiled, you can run the interpreter with:</p>
+    <pre><code>./lisp_interpreter</code></pre>
+    <p>To run a test file:</p>
+    <pre><code>./lisp_interpreter &lt;filename&gt;</code></pre>
     <details>
         <summary><strong>List of Implemented Functions</strong></summary>
         <ul>
-            <li><strong>Arithmetic Operations:</strong> +, -, *, /, %</li>
-            <li><strong>Comparison Operations:</strong> lt, gt, lte, gte, eq</li>
+            <li><strong>Arithmetic Operations:</strong> +, -, *, /, % (or: add, minus, mul, div, mod)</li>
+            <li><strong>Comparison Operations:</strong> <, >, <=,  >=, = (or: lt, gt, lte, gte, eq)</li>
             <li><strong>Logical Operations:</strong> and, or, not</li>
             <li><strong>Type Checks:</strong> NUM?, SYM?, LIST?, NIL?</li>
             <li><strong>List Operations:</strong> car, cdr, cons</li>
             <li><strong>Conditional Operations:</strong> if, cond</li>
             <li><strong>User Defined Functions:</strong> defun, set</li>
             <li><strong>Quoting and Evaluation:</strong> quote, eval</li>
-            <li><strong>SET:</strong> set</li>
         </ul>
     </details>
 <details>
@@ -26,37 +31,43 @@
         <details style="margin-left: 20px;">
             <summary><strong>Snapshot 1</strong></summary>
             <ul>
-                <li>In this snapshot, the basic arithmetic operations were implemented, allowing addition, subtraction, multiplication, division, and modulo. Test cases were written to verify the accuracy of these operations.</li>
+                <p> In this snapshot, I implemented the basic structure of S-Expression and created an AST to just print out the exprression after it has been tokinized and parsed.</p>
             </ul>
         </details>
         <details style="margin-left: 20px;">
             <summary><strong>Snapshot 2</strong></summary>
             <ul>
-                <li>Comparison functions such as lt, gt, lte, gte, and eq were added. Test cases validated correct logical responses for different input scenarios.</li>
+                <p>Type-checking functions have been implemented to distinguish between numbers, symbols, lists, and nil values. Additionally, boolean equivalents were established, with #T representing true and nil representing false. During testing, the interpreter correctly outputs true when #T is used and nil when false is represented. Furthermore, constructors were created for symbols and numbers from strings, as well as a constructor that takes two S-expressions (cons cells), necessitating the implementation of the car and cdr functions.</p>
             </ul>
         </details>
         <details style="margin-left: 20px;">
             <summary><strong>Snapshot 3</strong></summary>
             <ul>
-                <li>Logical operations including and, or, and not were implemented. Test cases demonstrated successful logical computation involving multiple conditions.</li>
+                <p>During this sprint, basic arithmetic functions were defined, including add (+) for addition, sub (-) for subtraction, mul (*) for multiplication, div (/) for division, and mod (%) for computing the remainder. Comparison functions were also introduced to compare numbers, such as lt (<), gt (>), lte (<=), and gte (>=). Additionally, the eq (=) function was implemented to compare two atoms, such as numbers or symbols, for equality. On the logical side, the not function was added to perform logical negation, allowing the interpreter to evaluate whether a value is logically false (nil) and return the corresponding truth value. </p>
             </ul>
         </details>
         <details style="margin-left: 20px;">
             <summary><strong>Snapshot 4</strong></summary>
-            <ul>
-                <li>Type checking functions were introduced to identify numbers, symbols, lists, or nil. These functions were verified through comprehensive test cases.</li>
+           <ul>
+            <p>For testing purposes, an initial implementation of the eval function was already in place ahead of this sprint. This early version served as a simple placeholder, designed to return the argument as-is. However, expanding its functionality required the introduction of a lookup function and a set function to handle symbol-value operations effectively. To manage these operations, I implemented an Environment class, which utilizes an unordered_map for efficient storage and retrieval of symbols and their corresponding values.</p>
+            <p>The Environment class leverages the unordered_map data structure to map symbols (keys) to their evaluated values. The set function was implemented to insert or update entries in this map, ensuring constant-time insertion and retrieval. Similarly, the lookup function checks the map for the presence of a symbol and returns its associated value if found. If the symbol is not present in the environment, the function simply returns the symbol itself, preserving the interpreter's functionality for undefined symbols.</p>
+            <p>To ensure accessibility across all operations, global functions, including set, were incorporated into the eval method. This integration allows the evaluation process to interact directly with the environment when handling symbols, ensuring a streamlined and efficient workflow.</p>
             </ul>
         </details>
         <details style="margin-left: 20px;">
             <summary><strong>Snapshot 5</strong></summary>
             <ul>
-                <li>List operations using car, cdr, and cons were added. These operations helped in creating and manipulating list structures, as verified by the test cases.</li>
-            </ul>
+                <p>In this sprint, short-circuiting logical functions and conditional statements (if and cond) were implemented. For logical, the and function was defined to evaluate its first expression (e1). If e1 evaluates to nil, and immediately returns nil without evaluating the second expression (e2). Otherwise, e2 is evaluated, and the result is returned, which could be #T or nil. Similarly, the or function was implemented to evaluate e1 first. If e1 evaluates to a truthy value (#T), it is returned without evaluating e2. If e1 is nil, e2 is evaluated, and its result (#T or nil) is returned.</p>
+                <p>For conditional execution, the if function was introduced. When invoked as (if e1 e2 e3), the interpreter evaluates e1. If e1 is truthy, the result of evaluating e2 is returned; otherwise, the result of evaluating e3 is returned. This ensures that only the necessary branch is evaluated. The cond function was similarly implemented to handle multiple conditional branches. Given pairs of conditions and expressions, cond evaluates each condition in sequence, stopping at the first truthy condition and evaluating its corresponding expression. If no condition evaluates to true, the behavior is left undefined and returns nil.</p>
         </details>
         <details style="margin-left: 20px;">
             <summary><strong>Snapshot 6</strong></summary>
             <ul>
-                <li>User-defined functions and conditional constructs were added, allowing for more flexible and dynamic behavior. The quote and eval functions were also introduced.</li>
+                <p>In this sprint, the interpreter was extended to support user-defined functions through the introduction of the defun keyword, allowing users to define and call custom functions. The syntax (defun fname (arg0 arg1 ... argn) body) enables users to create a function named fname, specify its arguments, and provide a single S-expression as the function body. To implement this, I used an Lisp2 approach, where functions and variables are stored in separate environments to avoid conflicts and ensure proper context-specific resolution.</p>
+                <p>The FunctionEnvironment class was created to manage user-defined functions. This class uses an unordered_map to store function definitions, mapping each function name to its argument list and body. The define method registers new functions, while the hasFunction and getFunction methods check for a function’s existence and retrieve its definition, respectively. These functions enable the interpreter to distinguish functions from variables, even when they share the same name, preserving the flexibility and clarity of a Lisp2 design. </p>
+                <p>The evalFun method was implemented to handle the definition of user-defined functions. It validates the structure of the defun expression, ensuring it consists of exactly three arguments: the function name, a list of arguments, and a function body. The argument list is parsed to ensure all elements are symbols (or nil for no arguments), while the function body is stored as-is. The function definition is then registered in the FunctionEnvironment using the define method, and nullptr (representing nil) is returned, as the definition does not produce a result.</p>
+                <p>The evalUserFun method processes calls to user-defined functions. When a user-defined function is invoked, its definition is retrieved from the FunctionEnvironment. The method validates that the number of provided arguments matches the function’s expected arguments. Each argument is then evaluated, and the results are stored in a list. A new Environment instance is created for the function call, using the current environment as its parent to support variable scoping. The evaluated arguments are then bound to their respective parameter names in the local environment.</p>
+                <p>During the function call, the local environment is temporarily set as the current environment, ensuring the function body is evaluated in its own scope. Once the body is evaluated, the original environment is restored, preventing residual side effects from the function’s execution. The result of evaluating the body is returned as the function’s result.</p>
             </ul>
         </details>
     </details>

@@ -69,15 +69,15 @@ SExprPtr Eval::evaluate(const SExprPtr& expr) {
             return evalIsNum(*list); // Return TRUTH or NIL
         } else if (symbol->name == "LIST?") {
             return evalIsList(*list); // Return TRUTH or NIL
-        } else if (symbol->name == "gt") {
+        } else if (symbol->name == "gt" || symbol->name == ">") {
             return evalGt(*list); // Return TRUTH or NIL
-        } else if (symbol->name == "lt") {
+        } else if (symbol->name == "lt"|| symbol->name == "<") {
             return evalLt(*list); // Return TRUTH or NIL
-        } else if (symbol->name == "gte") {
+        } else if (symbol->name == "gte"|| symbol->name == ">=" ){
             return evalGte(*list); // Return TRUTH or NIL
-        } else if (symbol->name == "lte") {
+        } else if (symbol->name == "lte"|| symbol->name == "<=") {
             return evalLte(*list); // Return TRUTH or NIL
-        } else if (symbol->name == "eq") {
+        } else if (symbol->name == "eq"|| symbol->name == "=") {
             return evalEq(*list); // Return TRUTH or NIL
         } else if (symbol->name == "not") {
             return evalNot(*list); // Return TRUTH or NIL
