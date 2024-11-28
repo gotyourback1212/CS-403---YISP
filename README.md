@@ -4,6 +4,7 @@
 </head>
 <body>
     <h1>Adam Howard - Lisp Interpreter</h1>
+    <p><strong>CS 403-001 </p>
     <p><strong>CWID:</strong> 12137238</p>
     <h2>Introduction</h2>
     <p>This Lisp interpreter was implemented to demonstrate the basics of Lisp language features, including arithmetic operations, logical operations, conditionals, list operations, and user-defined functions.</p>
@@ -73,6 +74,22 @@
     </details>
     <details>
         <summary><strong>Sample Test Cases</strong></summary>
+            <p>The <code>passFail</code> function is used to validate test cases in the Lisp interpreter. It takes two arguments: the actual result of an expression and the expected value. If the actual result matches the expected value, it prints "PASSED"; otherwise, it prints "FAILED".</p>
+            <ul>
+                <li><strong>Defining passFail:</strong></li>
+                <pre>
+                    (defun passFail (actual expected)  
+                        (if (eq actual expected)
+                            "PASSED"
+                            "FAILED"
+                        )
+                    )
+                </pre>
+                <li><strong>Usage Example:</strong></li>
+                <pre>
+                    (passFail (+ 10 5) 15) ; Expected Output: PASSED
+                </pre>
+            </ul>
         <details style="margin-left: 20px;">
             <summary><strong>Arithmetic Operations</strong></summary>
             <ul>
