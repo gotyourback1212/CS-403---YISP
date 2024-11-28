@@ -32,13 +32,13 @@
         <details style="margin-left: 20px;">
             <summary><strong>Snapshot 1</strong></summary>
             <ul>
-                <p> In this snapshot, I implemented the basic structure of S-Expression and created an AST to just print out the exprression after it has been tokinized and parsed.</p>
+                <p> In this sprint, I implemented the basic structure of S-Expression and created an AST to just print out the exprression after it has been tokinized and parsed.</p>
             </ul>
         </details>
         <details style="margin-left: 20px;">
             <summary><strong>Snapshot 2</strong></summary>
             <ul>
-                <p>Type-checking functions have been implemented to distinguish between numbers, symbols, lists, and nil values. Additionally, boolean equivalents were established, with #T representing true and nil representing false. During testing, the interpreter correctly outputs true when #T is used and nil when false is represented. Furthermore, constructors were created for symbols and numbers from strings, as well as a constructor that takes two S-expressions (cons cells), necessitating the implementation of the car and cdr functions.</p>
+                <p>In this sprint type-checking functions have been implemented to distinguish between numbers, symbols, lists, and nil values. Additionally, boolean equivalents were established, with #T representing true and nil representing false. During testing, the interpreter correctly outputs true when #T is used and nil when false is represented. Furthermore, constructors were created for symbols and numbers from strings, as well as a constructor that takes two S-expressions (cons cells), necessitating the implementation of the car and cdr functions.</p>
             </ul>
         </details>
         <details style="margin-left: 20px;">
@@ -90,6 +90,7 @@
                     (passFail (+ 10 5) 15) ; Expected Output: PASSED
                 </pre>
             </ul>
+             <p> Below is just few sample test cases that have been ran. Additional test cases can be seen by running the testCases.lisp file. The results can be seen in the testResults.txt file.</p>
         <details style="margin-left: 20px;">
             <summary><strong>Arithmetic Operations</strong></summary>
             <ul>
