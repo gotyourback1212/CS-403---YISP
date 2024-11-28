@@ -29,6 +29,7 @@
     </details>
 <details>
         <summary><strong>Snapshot Overview</strong></summary>
+        <p> NOTE: All sprints are functional. However, sprints 1-4 require the print funciton to be used to print out the results of any expresssion (EX: (print (+ 1 2)) ) This was because of confussion about wheter a print function needed to be implemented for the resulst to be printed. Sprints 5-6 do not require the print function (EX: (+ 1 2) ), but it is implemeneted for testing purposes, so I can print out string to make the test cases readable.</p>
         <details style="margin-left: 20px;">
             <summary><strong>Snapshot 1</strong></summary>
             <ul>
