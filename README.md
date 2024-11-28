@@ -1,122 +1,140 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lisp Interpreter README</title>
+    <title>Lisp Interpreter - README</title>
 </head>
 <body>
-    <h1>README</h1>
-    <strong>Adam Howard CWID: 12137238 Lisp Interpreter</strong><br>
-    <strong>Language Used:</strong> C++ (17 or later)<br>
-    <strong>Environments that the interpreter has been tested in:</strong> MacOS, Windows 11<br>
-    <strong>Compile command:</strong> <code>Use the make file by typing 'make' in the terminal</code><br>
-    <strong>Run command:</strong> <code>To run the code with test file type: ./lisp_interpreter [file name], otherwise will run in terminal.</code><br>
-    <strong>Run command testCases:</strong> <code>./lisp_interpreter testCases.txt</code><br><br>
-
+    <h1>Adam Howard - Lisp Interpreter</h1>
+    <p><strong>CWID:</strong> 12137238</p>
+    <h2>Introduction</h2>
+    <p>This Lisp interpreter was implemented to demonstrate the basics of Lisp language features, including arithmetic operations, logical operations, conditionals, list operations, and user-defined functions.</p>
     <details>
-        <summary><strong>Introduction to the Lisp Interpreter</strong></summary>
-        <p>This Lisp interpreter was implemented to demonstrate the basics of Lisp language features, including arithmetic operations, logical operations, conditionals, list operations, and user-defined functions. This interpreter handles a simplified version of Lisp, which makes it perfect for beginners to understand how Lisp-like interpreters work.</p>
-        <p>The results of various operations are either <code>#T</code> for true or <code>nil</code> for false. Test cases have been designed to validate the functionalities of the interpreter, using <code>passFail</code> functions to verify if the output matches the expected value.</p>
-    </details>
-
-    <details>
-        <summary><strong>Test Cases Overview</strong></summary>
-        <p>Test cases are used to validate the different functionalities of the Lisp interpreter. Each test case follows a simple structure that checks if the actual output matches the expected output. Below are examples of the types of operations tested:</p>
+        <summary><strong>List of Implemented Functions</strong></summary>
         <ul>
-            <li>Arithmetic Operations</li>
-            <li>Comparison Functions</li>
-            <li>Logical Operations</li>
-            <li>Conditional Operations</li>
-            <li>List Operations (CAR, CDR, CONS)</li>
-            <li>User-Defined Functions</li>
-            <li>Quoting and Evaluation</li>
+            <li><strong>Arithmetic Operations:</strong> +, -, *, /, %</li>
+            <li><strong>Comparison Operations:</strong> lt, gt, lte, gte, eq</li>
+            <li><strong>Logical Operations:</strong> and, or, not</li>
+            <li><strong>Type Checks:</strong> NUM?, SYM?, LIST?, NIL?</li>
+            <li><strong>List Operations:</strong> car, cdr, cons</li>
+            <li><strong>Conditional Operations:</strong> if, cond</li>
+            <li><strong>User Defined Functions:</strong> defun, set</li>
+            <li><strong>Quoting and Evaluation:</strong> quote, eval</li>
+            <li><strong>SET:</strong> set</li>
         </ul>
     </details>
-
-    <details>
-        <summary><strong>Example Test Case Breakdown</strong></summary>
-        <h3>Arithmetic Operations</h3>
-        <p>We perform arithmetic operations using predefined variables or direct numbers, such as addition, subtraction, multiplication, division, and modulo. The results are checked against the expected value using the <code>passFail</code> function.</p>
-        <ul>
-            <li><strong>Example:</strong> <code>(passFail (+ 10 5) 15)</code> checks if the addition of 10 and 5 results in 15. If correct, it returns "PASSED"; otherwise, "FAILED".</li>
-        </ul>
-
-        <h3>Logical Operations</h3>
-        <p>Logical operations include <code>not</code>, <code>and</code>, and <code>or</code>. They are used to test the logical combination of boolean results from comparison functions.</p>
-        <ul>
-            <li><strong>Example:</strong> <code>(passFail (and (gt 10 5) (lt 5 10)) #T)</code> checks if both <code>10 &gt; 5</code> and <code>5 &lt; 10</code> are true. Expected output: <code>#T</code>.</li>
-        </ul>
-
-        <h3>Conditional Operations</h3>
-        <p>Conditional tests include testing <code>if</code> statements and <code>cond</code> expressions.</p>
-        <ul>
-            <li><strong>Example:</strong> <code>(passFail (if (gt 10 5) #T nil) #T)</code> checks if the <code>if</code> condition <code>10 &gt; 5</code> results in <code>#T</code>.</li>
-        </ul>
+<details>
+        <summary><strong>Snapshot Overview</strong></summary>
+        <details style="margin-left: 20px;">
+            <summary><strong>Snapshot 1</strong></summary>
+            <ul>
+                <li>In this snapshot, the basic arithmetic operations were implemented, allowing addition, subtraction, multiplication, division, and modulo. Test cases were written to verify the accuracy of these operations.</li>
+            </ul>
+        </details>
+        <details style="margin-left: 20px;">
+            <summary><strong>Snapshot 2</strong></summary>
+            <ul>
+                <li>Comparison functions such as lt, gt, lte, gte, and eq were added. Test cases validated correct logical responses for different input scenarios.</li>
+            </ul>
+        </details>
+        <details style="margin-left: 20px;">
+            <summary><strong>Snapshot 3</strong></summary>
+            <ul>
+                <li>Logical operations including and, or, and not were implemented. Test cases demonstrated successful logical computation involving multiple conditions.</li>
+            </ul>
+        </details>
+        <details style="margin-left: 20px;">
+            <summary><strong>Snapshot 4</strong></summary>
+            <ul>
+                <li>Type checking functions were introduced to identify numbers, symbols, lists, or nil. These functions were verified through comprehensive test cases.</li>
+            </ul>
+        </details>
+        <details style="margin-left: 20px;">
+            <summary><strong>Snapshot 5</strong></summary>
+            <ul>
+                <li>List operations using car, cdr, and cons were added. These operations helped in creating and manipulating list structures, as verified by the test cases.</li>
+            </ul>
+        </details>
+        <details style="margin-left: 20px;">
+            <summary><strong>Snapshot 6</strong></summary>
+            <ul>
+                <li>User-defined functions and conditional constructs were added, allowing for more flexible and dynamic behavior. The quote and eval functions were also introduced.</li>
+            </ul>
+        </details>
     </details>
-
-    <details>
-        <summary><strong>Explanation of #T and nil</strong></summary>
-        <p>In this Lisp interpreter:</p>
-        <ul>
-            <li><code>#T</code> represents <strong>true</strong>.</li>
-            <li><code>nil</code> represents <strong>false</strong>.</li>
-        </ul>
-        <p>These boolean values are used to validate conditions, logical operations, and results from functions.</p>
-    </details>
-
     <details>
         <summary><strong>Sample Test Cases</strong></summary>
-        <details>
+        <details style="margin-left: 20px;">
             <summary><strong>Arithmetic Operations</strong></summary>
             <ul>
-                <li>Testing Addition: <code>(passFail (+ 10 5) 15)</code> (Expected: PASSED)</li>
-                <li>Testing Subtraction: <code>(passFail (- 10 5) 5)</code> (Expected: PASSED)</li>
-                <li>Testing Multiplication: <code>(passFail (* 10 5) 50)</code> (Expected: PASSED)</li>
-                <li>Testing Division: <code>(passFail (/ 10 2) 5)</code> (Expected: PASSED)</li>
-                <li>Testing Modulo: <code>(passFail (% 10 3) 1)</code> (Expected: PASSED)</li>
+                <li>Testing Addition: <code>(passFail (+ 10 5) 15)</code> (PASSED)</li>
+                <li>Testing Subtraction: <code>(passFail (- 10 5) 5)</code> (PASSED)</li>
+                <li>Testing Multiplication: <code>(passFail (* 10 5) 50)</code> (PASSED)</li>
+                <li>Testing Division: <code>(passFail (/ 10 2) 5)</code> (PASSED)</li>
+                <li>Testing Modulo: <code>(passFail (% 10 3) 1)</code> (PASSED)</li>
             </ul>
         </details>
-
-        <details>
+        <details style="margin-left: 20px;">
             <summary><strong>Comparison Operations</strong></summary>
             <ul>
-                <li>Testing Greater Than: <code>(passFail (gt 10 5) #T)</code> (Expected: PASSED)</li>
-                <li>Testing Less Than: <code>(passFail (lt 5 10) #T)</code> (Expected: PASSED)</li>
-                <li>Testing Greater Than or Equal: <code>(passFail (gte 10 10) #T)</code> (Expected: PASSED)</li>
-                <li>Testing Less Than or Equal: <code>(passFail (lte 7 8) #T)</code> (Expected: PASSED)</li>
-                <li>Testing Equality: <code>(passFail (eq 5 5) #T)</code> (Expected: PASSED)</li>
-                <li>Testing Not Equal: <code>(passFail (eq 5 6) nil)</code> (Expected: PASSED)</li>
+                <li>Testing Greater Than: <code>(passFail (gt 10 5) #T)</code> (PASSED)</li>
+                <li>Testing Less Than: <code>(passFail (lt 5 10) #T)</code> (PASSED)</li>
+                <li>Testing Greater Than or Equal: <code>(passFail (gte 10 10) #T)</code> (PASSED)</li>
+                <li>Testing Less Than or Equal: <code>(passFail (lte 7 8) #T)</code> (PASSED)</li>
+                <li>Testing Equality: <code>(passFail (eq 5 5) #T)</code> (PASSED)</li>
             </ul>
         </details>
-
-        <details>
-            <summary><strong>List Operations (CAR, CDR, CONS)</strong></summary>
+        <details style="margin-left: 20px;">
+            <summary><strong>Logical Operations</strong></summary>
             <ul>
-                <li>Constructing List: <code>(set x (cons 1 (cons 2 (cons 3 nil))))</code></li>
-                <li>Testing CAR: <code>(passFail (car x) 1)</code> (Expected: PASSED)</li>
-                <li>Testing CDR: <code>(passFail (cdr x) (cons 2 (cons 3 nil)))</code> (Expected: PASSED)</li>
-                <li>Testing Nested CAR/CDR: <code>(passFail (car (cdr (cdr x))) 3)</code> (Expected: PASSED)</li>
+                <li>Testing Logical AND: <code>(passFail (and #T #T) #T)</code> (PASSED)</li>
+                <li>Testing Logical OR: <code>(passFail (or nil #T) #T)</code> (PASSED)</li>
+                <li>Testing Logical NOT: <code>(passFail (not nil) #T)</code> (PASSED)</li>
             </ul>
         </details>
-
-        <details>
+        <details style="margin-left: 20px;">
+            <summary><strong>Type Checks</strong></summary>
+            <ul>
+                <li>Testing Number Check: <code>(passFail (NUM? 10) #T)</code> (PASSED)</li>
+                <li>Testing Symbol Check: <code>(passFail (SYM? 'x) #T)</code> (PASSED)</li>
+                <li>Testing List Check: <code>(passFail (LIST? (cons 1 nil)) #T)</code> (PASSED)</li>
+                <li>Testing NIL Check: <code>(passFail (NIL? nil) #T)</code> (PASSED)</li>
+            </ul>
+        </details>
+        <details style="margin-left: 20px;">
+            <summary><strong>List Operations</strong></summary>
+            <ul>
+                <li>Testing CAR: <code>(passFail (car (cons 1 (cons 2 nil))) 1)</code> (PASSED)</li>
+                <li>Testing CDR: <code>(passFail (cdr (cons 1 (cons 2 nil))) (cons 2 nil))</code> (PASSED)</li>
+                <li>Testing CONS: <code>(passFail (cons 1 nil) (cons 1 nil))</code> (PASSED)</li>
+            </ul>
+        </details>
+        <details style="margin-left: 20px;">
+            <summary><strong>Conditionals</strong></summary>
+            <ul>
+                <li>Testing IF with true condition: <code>(passFail (if (gt 10 5) #T nil) #T)</code> (PASSED)</li>
+                <li>Testing IF with false condition: <code>(passFail (if (lt 3 2) #T nil) nil)</code> (PASSED)</li>
+                <li>Testing COND with arithmetic operations: <code>(passFail (cond ((lt 10 5) nil) ((gte 5 5) #T)) #T)</code> (PASSED)</li>
+            </ul>
+        </details>
+        <details style="margin-left: 20px;">
             <summary><strong>User-Defined Functions</strong></summary>
             <ul>
                 <li>Defining Function <code>add3</code>: <code>(defun add3 (a) (+ a 3))</code></li>
-                <li>Testing Function <code>add3</code>: <code>(passFail (add3 5) 8)</code> (Expected: PASSED)</li>
-                <li>Defining Function <code>max</code>: <code>(defun max (a b) (if (gt a b) a b))</code></li>
-                <li>Testing Function <code>max</code>: <code>(passFail (max 10 20) 20)</code> (Expected: PASSED)</li>
+                <li>Testing function <code>add3</code> with input 5: <code>(passFail (add3 5) 8)</code> (PASSED)</li>
             </ul>
         </details>
-
-        <details>
+        <details style="margin-left: 20px;">
             <summary><strong>Quote & Eval Operations</strong></summary>
             <ul>
-                <li>Quoting a List: <code>(passFail (quote (1 2 3)) (cons 1 (cons 2 (cons 3 nil))))</code> (Expected: PASSED)</li>
-                <li>Evaluating a Quoted Expression: <code>(passFail (eval (quote (+ 2 3))) 5)</code> (Expected: PASSED)</li>
+                <li>Quoting a List: <code>(passFail (quote (1 2 3)) (cons 1 (cons 2 (cons 3 nil))))</code> (PASSED)</li>
+                <li>Evaluating a Quoted Expression: <code>(passFail (eval (quote (+ 2 3))) 5)</code> (PASSED)</li>
             </ul>
         </details>
+         <details style="margin-left: 20px;">
+        <summary><strong>Set Operations</strong></summary>
+        <ul>
+            <li>Setting Variable and Using It: <code>(set a 10) (passFail (+ a 5) 15)</code> PASSED)</li>
+        </ul>
+    </details>
     </details>
 </body>
 </html>
