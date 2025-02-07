@@ -162,7 +162,7 @@
          <details style="margin-left: 20px;">
         <summary><strong>Set Operations</strong></summary>
         <ul>
-            <li>Setting Variable and Using It: <code>(set a 10) (passFail (+ a 5) 15)</code> PASSED)</li>
+            <li>Setting Variable and Using It: <code>(set a 10) (passFail (+ a 5) 15)</code> (PASSED)=</li>
         </ul>
     </details>
     </details>
