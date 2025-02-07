@@ -9,17 +9,29 @@ void Symbol::print() const {
     std::cout << name;
 }
 
+void Nil::print() const {
+        std::cout << "nil";
+}
+
+void Truth::print() const {
+        std::cout << "true";
+}
 
 void List::print() const {
     std::cout << "(";
-    for (size_t i = 0; i < elements.size(); ++i) {
-        elements[i]->print();
-        if (i != elements.size() - 1) {
+    for (auto it = elements.begin(); it != elements.end(); ++it) {
+        (*it)->print();
+        if (std::next(it) != elements.end()) {
             std::cout << " ";
         }
     }
     std::cout << ")";
 }
+
+void String::print() const {
+    std::cout << value;
+}
+
 
 
 

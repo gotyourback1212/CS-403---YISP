@@ -1,14 +1,16 @@
-#ifndef LEXER_H
-#define LEXER_H
+#ifndef TOKEN_H
+#define TOKEN_H
 
 #include <string>
 #include <vector>
+#include <list>
 
 enum class TokenType {
     NUMBER,
     SYMBOL,
     LPAREN,
     RPAREN,
+    STRING,
     END
 };
 
@@ -17,6 +19,6 @@ struct Token {
     std::string text;
 };
 
-std::vector<Token> tokenize(const std::string& input);
+std::list<Token> tokenize(const std::string& input);
 
-#endif // LEXER_H
+#endif // TOKEN_H

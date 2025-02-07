@@ -1,0 +1,123 @@
+ARITHMETIC OPERATIONS WITH VARIABLES (+ - * / %):  a = 10  b = 5
+Testing Addition:            '(+ a b)'                      (Expected: 15):             	PASSED
+Testing Subtraction:         '(- a b)'                      (Expected: 5):              	PASSED
+Testing Multiplication:      '(* a b)'                      (Expected: 50):             	PASSED
+Testing Division:            '(/ a b)'                      (Expected: 2):              	PASSED
+Testing Modulo:              '(% a b)'                      (Expected: 0):              	PASSED
+Testing Complex Expression:  '(+ (* a b) (- a b))'          (Expected: 55):             	PASSED
+Testing Complex Expression:  '(+ (+ b (* a b)) (/ a b))'    (Expected: 57):             	PASSED
+
+
+COMPARISION OPERATIONS WITH VARIABLES (gt, lt, gte, lte, eq):  a = 10  b = 5
+Testing Greater Than:          '(gt a b)'       (Expected: #T):       	PASSED
+Testing Greater Than:          '(gt b a)'       (Expected: nil):      	PASSED
+Testing Less Than:             '(lt b a)'       (Expected: #T):       	PASSED
+Testing Less Than:             '(lt a b)'       (Expected: nil):      	PASSED
+Testing Equality:              '(eq a a)'       (Expected: #T):       	PASSED
+Testing Not Equal:             '(eq a b)'       (Expected: nil):      	PASSED
+Testing Greater Than or Equal: '(gte a b)'      (Expected: #T):       	PASSED
+Testing Greater Than or Equal: '(gte b a)'      (Expected: nil):      	PASSED
+Testing Greater Than or Equal: '(gte a a)'      (Expected: #T):       	PASSED
+Testing Less Than or Equal:    '(lte b a)'      (Expected: #T):       	PASSED
+Testing Less Than or Equal:    '(lte a b)'      (Expected: nil):      	PASSED
+Testing Less Than or Equal:    '(lte a a)'      (Expected: #T):       	PASSED
+
+
+LOGICAL OPERATIONS (AND OR NOT)
+Testing Logical AND:                                    '(and #T #T)'                                         (Expected: #T):          	PASSED
+Testing Logical AND:                                    '(and nil #T)'                                        (Expected: nil):         	PASSED
+Testing Logical OR:                                     '(or nil #T)'                                         (Expected: #T):         	PASSED
+Testing Logical OR:                                     '(or nil nil)'                                        (Expected: nil):        	PASSED
+Testing Logical NOT:                                    '(not nil)'                                           (Expected: #T):         	PASSED
+Testing Logical NOT:                                    '(not #T)'                                            (Expected: nil):        	PASSED
+Testing NOT operation on 'gt 5 10':                     '(not (gt 5 10))'                                     (Expected: #T):        	PASSED
+Testing NOT operation on 'lt 5 10':                     '(not (lt 5 10))'                                     (Expected: nil):       	PASSED
+Testing AND operation on '(gt 10 5) (lt 5 10)':         '(and (gt 10 5) (lt 5 10))'                           (Expected: #T):        	PASSED
+Testing AND operation with one false condition          '(lt 10 5) (lt 5 10)': '(and (lt 10 5) (lt 5 10))'    (Expected: nil):       	PASSED
+Testing OR operation with one true condition            '(gt 10 5) (gt 5 10)': '(or (gt 10 5) (gt 5 10))'     (Expected: #T):       	PASSED
+Testing OR operation with both false conditions         '(lt 5 4) (lt 3 2)': '(or (lt 5 4) (lt 3 2))'         (Expected: nil):      	PASSED
+
+
+TYPE CHECKS (SYM?, NUM?, LIST?, NIL?) a = 1  b = x
+Testing Symbol Check:         '(SYM? 'x)'               (Expected: #T):       	PASSED
+Testing Symbol Check:         '(SYM? 2)'                (Expected: nil):      	PASSED
+Testing Symbol Check:         '(SYM? b)'                (Expected: #T):       	PASSED
+Testing Symbol Check:         '(SYM? a)'                (Expected: nil):      	PASSED
+Testing Number Check:         '(NUM? 10)'               (Expected: #T):       	PASSED
+Testing Number Check:         '(NUM? x)'                (Expected: nil):      	PASSED
+Testing Number Check:         '(NUM? a)'                (Expected: #T):       	PASSED
+Testing Number Check:         '(NUM? b)'                (Expected: nil):      	PASSED
+Testing List Check:           '(LIST? (cons 1 nil))'    (Expected: #T):    	PASSED
+Testing NIL Check:            '(NIL? nil)'              (Expected: #T):       	PASSED
+Testing NIL Check:            '(NIL? #T)'               (Expected: nil):      	PASSED
+
+
+LIST OPERATIONS (CAR, CDR, CONS):   x = (1 2 3)
+Testing List Construction with 'cons':              '(set x (cons 1 (cons 2 (cons 3 nil))))'                                    (Expected: #T):                               	PASSED
+Testing cdr operation on list 'x':                  '(cdr x)'                                                                   (Expected: (cons 2 (cons 3 nil))):            	PASSED
+Testing car of cdr on list 'x':                     '(car (cdr x))'                                                             (Expected: 2):                                	PASSED
+Testing car of cdr on list 'x':                     '(car (cdr (cdr x)))'                                                       (Expected: 3):                                	PASSED
+Testing List Construction with 'cons':              '(set x (cons 1 (cons 2 (cons 3 (cons 4 nil)))))'                           (Expected: #T):                                	PASSED
+Testing cdr operation on list 'x':                  '(cdr x)'                                                                   (Expected: (2 3 4)):                           	PASSED
+Testing car of cdr on list 'x':                     '(car (cdr x))'                                                             (Expected: 2):                                 	PASSED
+Testing car of cdr of cdr on list 'x':              '(car (cdr (cdr x)))'                                                       (Expected: 3):                                 	PASSED
+Testing Nested List Construction:                   '(set y (cons (cons 1 (cons 2 nil)) (cons (cons 3 (cons 4 nil)) nil)))'     (Expected: #T):                                	PASSED
+Testing car operation on nested list 'y':           '(car (car y))'                                                             (Expected: 1):                                 	PASSED
+Testing cdr operation on nested list 'y':           '(cdr (car y))'                                                             (Expected: (2)):                               	PASSED
+Testing cons to add element to front of list 'x':   '(set z (cons 0 x))'                                                        (Expected: (0 1 2 3 4)):                      	PASSED
+Testing cdr after cons operation on 'z':            '(cdr z)'                                                                   (Expected: (1 2 3 4)):                        	PASSED
+Testing mixed data type list construction:          '(set mixedList (cons 1 (cons #T (cons 'a (cons nil nil)))))'               (Expected: #T):                               	PASSED
+Testing car of cdr of mixed list:                   '(car (cdr mixedList))'                                                     (Expected: #T):                               	PASSED
+Testing car of cdr of cdr of mixed list:            '(car (cdr (cdr mixedList)))'                                               (Expected: 'a'):                              	PASSED
+Testing car of cdr of cdr of cdr of mixed list:     '(car (cdr (cdr (cdr mixedList))))'                                         (Expected: nil):                              	PASSED
+
+
+CONDITIONALS
+Testing IF with true condition:                                     '(if (gt 10 5) #T nil)'                                                             (Expected: #T):       	PASSED
+Testing IF with false condition:                                    '(if (lt 3 2) #T nil)'                                                              (Expected: nil):      	PASSED
+Testing IF with arithmetic operations:                              '(if (gte 3 2) (+ 1 2) (* 3 3))'                                                    (Expected: 3):        	PASSED
+Testing COND with first false, second true condition:               '(cond ((lt 10 5) nil) ((gte 5 5) #T))'                                             (Expected: #T):       	PASSED
+Testing COND with arithmetic operations a = 10 b = 5:               '(cond ((lt a b) (+ a b)) ((eq a b) (- a b)) ((gt a b) (* a b)))'                   (Expected: 50):       	PASSED
+
+
+USER DEFINED FUNCTIONS
+Defining and testing function 'add3' with input 5:                      '(add3 5)'                       (Expected: 8):        	PASSED
+Defining and testing function 'max' with inputs 10 and 20:              '(max 10 20)'                    (Expected: 20):       	PASSED
+Defining and testing function 'add2' with inputs 3 and 7:               '(add2 3 7)'                     (Expected: 10):       	PASSED
+Defining and testing function 'sub' with inputs 10 and 4:               '(sub3 10 4 3)'                  (Expected: 3):        	PASSED
+Defining and testing function 'mul3' with inputs 2, 3, and 4:           '(mul3 2 3 4)'                   (Expected: 24):       	PASSED
+Defining and testing function 'isPositive' with input 5:                '(isPositive 5)'                 (Expected: #T):      	PASSED
+Defining and testing function 'isPositive' with input -1:               '(isPositive -1)'                (Expected: nil):     	PASSED
+Defining and testing function 'factorial' with input 5:                 '(factorial 5)'                  (Expected: 120):      	PASSED
+Defining and testing function 'min' with inputs 10 and 20:              '(min 10 20)'                    (Expected: 10):       	PASSED
+Defining and testing function 'min' with inputs 15 and 5:               '(min 15 5)'                     (Expected: 5):        	PASSED
+Defining and testing function 'isEqualToFive' with input 5:             '(isEqualToFive 5)'              (Expected: #T):       	PASSED
+Defining and testing function 'isEqualToFive' with input 6:             '(isEqualToFive 6)'              (Expected: nil):      	PASSED
+Defining and testing function 'max3' with inputs 3, 7, and 5:           '(max3 3 7 5)'                   (Expected: 7):        	PASSED
+Defining and testing function 'max3' with inputs 12, 15, and 10:        '(max3 12 15 10)'                (Expected: 15):       	PASSED
+Defining and testing function 'first' with input '(1 2 3)':             '(first (quote (1 2 3)))'        (Expected: 1):        	PASSED
+Testing Fibonacci calculation for n=6 demonstrating recursive calls:    '(fib 6)'                        (Expected: 8):        	PASSED
+
+
+QUOTE & EVAL
+Quoting a list '(1 2 3)':                       '(quote (1 2 3))'                (Expected: (1 2 3)):         	PASSED
+Quoting a function call '(+ 1 2)':              '(quote (+ 1 2))'                (Expected: (+ 1 2)):         	PASSED
+Evaluating quoted expression '(+ 2 3)':         '(eval (quote (+ 2 3)))'         (Expected: 5):               	PASSED
+Evaluating quoted function with input 4:        '(eval (quote (square 4)))'      (Expected: 16):              	PASSED
+
+
+SET
+Setting variable 'y' to 25 and adding 10:                           '(set y 25)' then '(+ y 10)'                    (Expected: 35):             	PASSED
+Setting variable '3As' to aaa:                                      '(set 3As aaa)'  then '3As'                     (Expected: aaa):            	PASSED
+Setting variable 'a' to 10:                                         '(set a 10)'                                    (Expected: 10):             	PASSED
+Setting variable 'b' to 5:                                          '(set b 5)'                                     (Expected: 5):              	PASSED
+Setting variable 'c' to the sum of 'a' and 'b':                     '(set c (+ a b))'                               (Expected: 15):             	PASSED
+Setting variable 'd' to the product of 'a' and 'b':                 '(set d (* a b))'                               (Expected: 50):             	PASSED
+Setting variable 'f' to a list:                                     '(set f (cons 1 (cons 2 (cons 3 nil))))'        (Expected: (1 2 3)):        	PASSED
+Updating variable 'a' to 20:                                        '(set a 20)'                                    (Expected: 20):             	PASSED
+Setting variable 'g' to 'a + 30':                                   '(set g (+ a 30))'                              (Expected: 50):             	PASSED
+Setting variable 'h' to evaluated expression '(+ a b)':             '(set h (eval (quote (+ a b))))'                (Expected: 25):             	PASSED
+Setting variable 'i' to nil:                                        '(set i nil)'                                   (Expected: nil):            	PASSED
+Setting variable 'j' to result of '(square 4)':                     '(set j (square 4))'                            (Expected: 16):             	PASSED
+
+
